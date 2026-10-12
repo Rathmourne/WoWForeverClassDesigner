@@ -1,0 +1,10 @@
+{
+  "name": "wow-forever-class-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node build-site.cjs",
+    "test": "node --test --test-isolation=none tests/*.test.cjs"
+  },
+  "engines": { "node": ">=22" }
+}

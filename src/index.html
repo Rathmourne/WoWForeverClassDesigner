@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111418">
+  <meta name="description" content="Explore Classic-inspired talent trees and class abilities. Create and share your build with friends.">
+  <title>WoW Forever Class Designer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="calculator-only">
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="WoW Forever Class Designer home"><span class="brand-mark">✦</span><span>WoW <b>FOREVER</b><small>CLASS DESIGNER</small></span></a>
+    <span class="header-divider"></span><span class="header-section">Talent calculator</span>
+    <div class="header-actions"><a class="secondary designer-link" href="designer.html">✎ Design mode</a><span id="save-status" class="save-status" role="status">Your build · Your device</span><button id="share-build" class="gold">Share build ↗</button></div>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-heading"><span>CLASSES</span></div>
+      <nav id="class-list" aria-label="Classes"></nav>
+      <div class="sidebar-footer"><div class="tiny-label">THE CLASSIC CANVAS</div><p>Three trees. Every point matters.</p><span>Custom designs · Level 60</span></div>
+    </aside>
+    <main>
+      <div class="breadcrumb">CALCULATOR <span>/</span> <span id="breadcrumb-class"></span></div>
+      <section class="class-heading"><div class="class-title-group"><img id="class-icon" class="class-emblem" alt=""><div><div class="eyebrow">CLASSIC REIMAGINED</div><h1 id="class-name"></h1><p id="class-description"></p></div></div></section>
+      <p id="shared-notice" class="shared-notice" hidden>Shared build · Points are saved separately from your own builds and designs.</p>
+      <div class="workspace-toolbar"><div class="tabs" role="tablist" aria-label="Class content"><button id="tab-talents" role="tab" aria-selected="true" aria-controls="workspace" class="active">Talent trees</button><button id="tab-abilities" role="tab" aria-selected="false" aria-controls="workspace">Class abilities <span id="ability-count"></span></button></div></div>
+      <div id="workspace" class="workspace" role="tabpanel" aria-labelledby="tab-talents"><section id="canvas" aria-label="Class calculator">Loading classes…</section><aside id="inspector" class="inspector" aria-label="Selected talent or ability"></aside></div>
+      <footer class="content-footer"><span><i class="status-dot"></i> Your points are saved on this device</span><a href="https://www.wowhead.com/" target="_blank" rel="noreferrer">Icons &amp; original references: Wowhead ↗</a><a href="https://foreverdb.net" target="_blank" rel="noreferrer">Forever spell coefficients: ForeverDB ↗</a></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <div id="tooltip" class="spell-tooltip" role="tooltip" hidden></div>
+  <dialog id="share-dialog" aria-labelledby="share-title"><div class="dialog-header"><h2 id="share-title">Share your build</h2><button id="close-share" class="quiet" aria-label="Close share dialog">×</button></div><div class="build-link"><label for="build-link">Build link</label><input id="build-link" readonly><p>Your friends can open this link and change their own points. No sign-in needed.</p><button id="copy-link" class="gold">Copy link</button></div></dialog>
+  <script src="core.js"></script>
+  <script src="builds.js"></script>
+  <script src="calculator.js"></script>
+</body>
+</html>
