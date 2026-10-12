@@ -37,7 +37,7 @@ test('Main calculator retains player controls and links to the separate local-co
   const html=fs.readFileSync(path.join(site,'index.html'),'utf8'),runtime=fs.readFileSync(path.join(site,'calculator.js'),'utf8');
   assert.doesNotMatch(html,/mode-design|import-project|class-settings|editor-dialog|app\.js/);
   assert.doesNotMatch(runtime,/item-edit|enter-design|add-talent|add-ability|readItemForm|editForm|renderLibrary/);
-  for(const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)){if(!match[1].startsWith('https:')&&match[1]!=='./')assert.ok(fs.existsSync(path.join(site,match[1])),match[1]);}
+  for(const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)){if(!match[1].startsWith('https:')&&match[1]!=='./')assert.ok(fs.existsSync(path.join(site,match[1].split('?')[0])),match[1]);}
   assert.doesNotMatch(html,/\b(?:src|href)="\//);
   assert.ok(fs.existsSync(path.join(site,'.nojekyll')));
   assert.match(html,/href="designer.html"/);

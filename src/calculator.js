@@ -9,7 +9,9 @@ let project;
 try{const response=await fetch('project.json',{cache:'no-cache'});if(!response.ok)throw Error('Class data could not be loaded.');project=C.validateProject(await response.json());}
 catch(error){$('canvas').textContent=error.message;return;}
 let storageKey=B.storageKey(project,location.hash);
-let activeId=project.classes[0].id,view='talents',selection=null,abilityQuery='',toastTimer;
+const entry = new URLSearchParams(location.search);
+const requestedClass = project.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
+let activeId=requestedClass?.id||classNavigation(project.classes)[0].id,view=entry.get('view')==='abilities'?'abilities':'talents',selection=null,abilityQuery='',toastTimer;
 const current=()=>project.classes.find(c=>c.id===activeId)||project.classes[0];
 function selected(){const c=current();if(selection?.kind==='talent')for(const tree of c.trees){const item=tree.talents.find(t=>t.id===selection.id);if(item)return{item,tree};}if(selection?.kind==='ability'){const item=c.abilities.find(a=>a.id===selection.id);if(item)return{item};}return null;}
 function selectDefault(){selection=view==='abilities'&&current().abilities[0]?{kind:'ability',id:current().abilities[0].id}:current().trees[0].talents[0]?{kind:'talent',id:current().trees[0].talents[0].id}:null;}
@@ -24,6 +26,7 @@ function loadBuild(hash){
 }
 try{loadBuild(location.hash);}catch(error){toast(error.message);}
 function render(){const c=current();document.documentElement.style.setProperty('--class',c.color);$('tooltip').hidden=true;
+document.querySelector('.designer-link').href='designer.html?'+new URLSearchParams({class:c.id,view,mode:'design'});
 $('class-list').innerHTML=classNavigation(project.classes).map(k=>`<button class="class-nav ${k.id===c.id?'active':''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id===c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t=>esc(t.name)).join(' · ')}</small></div></button>`).join('');
 for(const id of ['class-name','breadcrumb-class'])$(id).textContent=c.name;$('class-description').textContent=c.description;$('class-icon').src=c.icon;$('ability-count').textContent=c.abilities.length;
 for(const name of ['talents','abilities']){$('tab-'+name).classList.toggle('active',view===name);$('tab-'+name).setAttribute('aria-selected',view===name);} $('workspace').setAttribute('aria-labelledby','tab-'+view);

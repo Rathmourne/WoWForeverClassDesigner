@@ -118,7 +118,9 @@ const $ = id => document.getElementById(id);
   if((newArtwork||newClasses||newSpellDetails)&&!playMode){
     try{localStorage.setItem(storageKey,JSON.stringify(project));}catch(error){restoreMessage='Spec backgrounds applied. Export a backup if browser storage is full.';}
   }
-  let activeId = project.classes[0].id, view = 'talents', mode = 'build', selection = null;
+  const entry = new URLSearchParams(location.search);
+  const requestedClass = project.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
+  let activeId = requestedClass?.id || classNavigation(project.classes)[0].id, view = entry.get('view')==='abilities'?'abilities':'talents', mode = !playMode&&entry.get('mode')==='design'?'design':'build', selection = null;
   let libraryQuery = '', libraryKind = 'All', libraryPage = 0;
   let abilityQuery='',shareScope='current',shareIncludeRanks=false;
   let undoStack = [], redoStack = [], toastTimer;
@@ -169,6 +171,7 @@ const $ = id => document.getElementById(id);
     if (!selected()) selectDefault(); save(); render(); toast('Change restored.');
   }
   function render() {
+    document.querySelector('.calculator-home').href='./?'+new URLSearchParams({class:current().id,view:view==='abilities'?'abilities':'talents'});
     const c = current(); document.documentElement.style.setProperty('--class', c.color);
     $('class-list').innerHTML=classNavigation(project.classes).map(k => `<button class="class-nav ${k.id === c.id ? 'active' : ''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id === c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t => esc(t.name)).join(' · ')}</small></div></button>`).join('');
     $('breadcrumb-class').textContent = c.name; $('class-name').textContent = c.name;
