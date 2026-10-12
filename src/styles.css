@@ -78,3 +78,6 @@ dialog{background:#11161c;border-color:#416681}
 .artwork-preview{border-color:#416681}
 .artwork-choice[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .artwork-choice[aria-pressed="true"] span{color:var(--accent-bright)}
+
+/* Classic texture resolution applies to the artwork layer only. */
+.tree-art{background-image:linear-gradient(#090c124a,#06070a77),var(--classic-artwork,var(--tree-image))}

@@ -57,4 +57,6 @@ Game icons and original reference spell data come from [Wowhead](https://www.wow
 
 The Blood, Unholy, Demon Hunter, and Scarlet Monk backgrounds use a Classic-era painted style generated with the built-in image generation tool. Frost retains its original frozen-citadel image. The [prompt set](assets/spec-backgrounds/classic-art-prompts.json) records the eight generated replacements. Artwork loading is versioned without changing project definitions, saved ranks, or uploaded backgrounds.
 
+Bundled custom-spec backgrounds render as 256 × 384 textures for a softer Classic look. This uses a separate background layer; talent icons, rank text, and prerequisite arrows retain their original resolution. Full-size source paintings remain available, and standalone exports embed the same lower-resolution backgrounds.
+
 Workflow setup follows [GitHub's custom Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).

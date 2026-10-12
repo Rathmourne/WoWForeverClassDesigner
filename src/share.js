@@ -49,17 +49,23 @@
       return images.get(path);
     }
     const tasks = [];
-    const replace = (object, key) => tasks.push(image(object[key]).then(value => { object[key] = value; }));
+    const replace = (object, key) => {
+      const path=object[key];
+      const asset=key==='background'&&global.ClassicArtwork?.supports(path)
+        ? global.ClassicArtwork.texture(path+'?v=20261012-classic1').then(value=>value||image(path))
+        : image(path);
+      tasks.push(asset.then(value => { object[key] = value; }));
+    };
     for (const c of copy.classes) {
       replace(c, 'icon');
       for (const tree of c.trees) { replace(tree, 'icon'); replace(tree, 'background'); for (const t of tree.talents) replace(t, 'icon'); }
       for (const a of c.abilities) replace(a, 'icon');
     }
     await Promise.all(tasks);
-    const files = await Promise.all(['designer.html', 'styles.css', 'core.js', 'library-tools.js', 'share.js', 'app.js'].map(async path => {
+    const files = await Promise.all(['designer.html', 'styles.css', 'core.js', 'library-tools.js', 'share.js', 'app.js', 'classic-artwork.js'].map(async path => {
       const response = await fetch(path,{cache:'no-store'}); if (!response.ok) throw new Error('Could not bundle calculator files.'); return response.text();
     }));
-    const [html, css, core, library, sharing, app] = files;
+    const [html, css, core, library, sharing, app, artwork] = files;
     const safeScript = value => value.replace(/<\/script/gi, '<\\/script');
     const data = JSON.stringify(copy).replace(/</g, '\\u003c');
     return html.replace(/<link rel="stylesheet" href="styles\.css(?:\?[^"]*)?">/, () => '<style>' + css.replace(/<\/style/gi, '<\\/style') + '</style>')
@@ -69,6 +75,7 @@
       .replace(/<script src="core\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(core) + '</script>')
       .replace(/<script src="library-tools\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(library) + '</script>')
       .replace(/<script src="share\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(sharing) + '</script>')
+      .replace(/<script src="classic-artwork\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(artwork) + '</script>')
       .replace(/<script src="app\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(app) + '</script>');
   }
   const api = { encode, decode, fingerprint, standalone, storageKey, snapshot };
