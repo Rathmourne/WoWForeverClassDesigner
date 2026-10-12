@@ -4,7 +4,9 @@
   const Library = window.TalentForgeLibrary;
   const references = window.WOW_REFERENCE || [];
   const allEntries = references.flatMap(c => c.entries.map(e => ({ ...e, className: c.name, classSlug: c.slug, gameVersion: c.gameVersion })));
-  const $ = id => document.getElementById(id);
+  const bottomClasses = new Set(['death-knight','demon-hunter','monk']);
+const classNavigation = classes => [...classes].sort((a,b) => Number(bottomClasses.has(a.sourceSlug))-Number(bottomClasses.has(b.sourceSlug)));
+const $ = id => document.getElementById(id);
   const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const uid = prefix => prefix + '-' + (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
   const fallback = 'assets/wowhead/inv_misc_questionmark.jpg';
@@ -168,7 +170,7 @@
   }
   function render() {
     const c = current(); document.documentElement.style.setProperty('--class', c.color);
-    $('class-list').innerHTML = project.classes.map(k => `<button class="class-nav ${k.id === c.id ? 'active' : ''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id === c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t => esc(t.name)).join(' · ')}</small></div></button>`).join('');
+    $('class-list').innerHTML=classNavigation(project.classes).map(k => `<button class="class-nav ${k.id === c.id ? 'active' : ''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id === c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t => esc(t.name)).join(' · ')}</small></div></button>`).join('');
     $('breadcrumb-class').textContent = c.name; $('class-name').textContent = c.name;
     $('class-description').textContent = c.description; $('class-icon').src = c.icon;
     $('ability-count').textContent = c.abilities.length;

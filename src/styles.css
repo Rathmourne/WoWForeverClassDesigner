@@ -26,3 +26,55 @@
 .designer-link,.calculator-home{display:inline-block;padding:8px 12px;border:1px solid #555044;border-radius:4px;color:#dfc494;font-size:12px;white-space:nowrap}.calculator-home{font-size:11px}
 
 .shared-notice{color:#d7c28f;background:#25241d;border:1px solid #625336;padding:10px 14px;border-radius:4px;margin-bottom:18px;font-size:12px}.dialog-form .share-rank-option{display:flex;gap:8px;align-items:center}.share-rank-option input{width:auto}
+
+/* Forever interface: black surfaces and icy blue accents. */
+:root{--bg:#08090b;--panel:#111316;--surface:#191c20;--line:#2b3036;--text:#e9edf2;--muted:#939da9;--accent:#46b8ef;--accent-bright:#8dd9ff;--gold:var(--accent);--gold-bright:var(--accent-bright)}
+body{background:radial-gradient(ellipse at 70% 0%,#131a22 0,transparent 52%),var(--bg)}
+button:hover{background:#252b32;border-color:#426278}
+button.gold{background:linear-gradient(#6acaff,#38a9e2);color:#07141d;border-color:#72ccff}
+button.gold:hover{background:#8dd9ff}
+.app-header{background:#0d0f12ee;border-bottom-color:var(--line)}
+.brand,.brand b{color:var(--accent-bright)}
+.brand small{color:#92a8b8}
+.brand-mark{border-color:#365d74;background:linear-gradient(140deg,#192b38,#0d1116);color:var(--accent)}
+.sidebar{background:#0c0e11;border-color:var(--line)}
+.class-nav.active{background:linear-gradient(90deg,#183247,#14191f);border-color:#305872;box-shadow:inset 2px 0 var(--accent)}
+.class-nav.active span{color:var(--accent-bright)}
+.tiny-label,.breadcrumb span:last-child,.eyebrow,.inspector-header,.inspector-label{color:#82bbdc}
+h1,.selected-title h2,.ability-card strong,#template-preview h3,.library-result strong{color:var(--text)}
+.class-emblem{border-color:#416681;background:#0b0e12}
+.workspace-toolbar{border-color:var(--line)}
+.mode-switch{background:#090c10;border-color:var(--line)}
+.mode-switch button.active{background:#193b52;color:var(--accent-bright)}
+.allocation-bar{background:linear-gradient(100deg,#16232e,#101419);border-color:#2b465b}
+.allocation strong,.tree-points,.rank-controls span{color:var(--accent-bright)}
+.allocation span,.allocation-bar .level,.canvas-legend .hint{color:#a1acb6}
+.allocation-bar .level b{color:var(--text)}
+.tree-panel{border-color:#35434f;background:#0c0f13}
+.tree-title{background:linear-gradient(#1d252e,#11161c);border-color:#35434f}
+.tree-bottom{background:#101419;border-color:#2d3b48;color:#9eafbc}
+.talent-node.selected{box-shadow:0 0 0 2px var(--accent-bright),0 0 15px #46b8ef66}
+.empty-slot{border-color:#7396ad60;color:#9db8ca}
+.empty-slot:hover{background:#46b8ef22}
+.inspector{background:linear-gradient(#191e25,#101317);border-color:#303a45}
+.inspector-header{border-color:var(--line)}
+.details-grid dd{color:#d5e4ef}
+.design-invite{background:#111b24;border-color:#2d4658;color:#a7b8c5}
+.design-invite button,.content-footer a{color:#82bbdc}
+.edit-form input,.edit-form select,.edit-form textarea,.dialog-form input,.dialog-form select,.dialog-form textarea,.library-search,.library-filters select,.ability-search input,.build-link input,.json-result{background:#090c10;border-color:#35424d;color:var(--text)}
+.ability-card{background:#14191f;border-color:#303a44}
+.ability-card.active{background:linear-gradient(120deg,#163247,#121a22);border-color:#46b8ef}
+.ability-detail{background:linear-gradient(125deg,#13202b,#0f1318 65%);border-color:#30485a}
+.spell-details-table{background:#14232e80;border-color:#30485a}
+.spell-details-table>div,.effect-row{border-color:#2c3a4645}
+.spell-details-table p,.effect-row{color:#c7dfef}
+.source-callout,.shared-notice{background:#102331;border-color:#315b74;color:#b6dcf3}
+.source-callout{border-left-color:var(--accent)}
+dialog{background:#11161c;border-color:#416681}
+.dialog-header{border-color:var(--line)}
+#toast{background:#122332;border-color:#416681;color:#d3ecfc}
+.designer-link,.calculator-home{border-color:#36566c;color:var(--accent-bright)}
+.template-result.active{border-color:var(--accent);background:#46b8ef18}
+.artwork-preview{border-color:#416681}
+.artwork-choice[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.artwork-choice[aria-pressed="true"] span{color:var(--accent-bright)}

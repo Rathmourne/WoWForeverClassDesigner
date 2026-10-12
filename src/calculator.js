@@ -1,6 +1,8 @@
 (async function(){
 'use strict';
 const C=window.TalentForgeCore,B=window.TalentForgeBuild;
+const bottomClasses = new Set(['death-knight','demon-hunter','monk']);
+const classNavigation = classes => [...classes].sort((a,b) => Number(bottomClasses.has(a.sourceSlug))-Number(bottomClasses.has(b.sourceSlug)));
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let project;
@@ -22,7 +24,7 @@ function loadBuild(hash){
 }
 try{loadBuild(location.hash);}catch(error){toast(error.message);}
 function render(){const c=current();document.documentElement.style.setProperty('--class',c.color);$('tooltip').hidden=true;
-$('class-list').innerHTML=project.classes.map(k=>`<button class="class-nav ${k.id===c.id?'active':''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id===c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t=>esc(t.name)).join(' · ')}</small></div></button>`).join('');
+$('class-list').innerHTML=classNavigation(project.classes).map(k=>`<button class="class-nav ${k.id===c.id?'active':''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id===c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t=>esc(t.name)).join(' · ')}</small></div></button>`).join('');
 for(const id of ['class-name','breadcrumb-class'])$(id).textContent=c.name;$('class-description').textContent=c.description;$('class-icon').src=c.icon;$('ability-count').textContent=c.abilities.length;
 for(const name of ['talents','abilities']){$('tab-'+name).classList.toggle('active',view===name);$('tab-'+name).setAttribute('aria-selected',view===name);} $('workspace').setAttribute('aria-labelledby','tab-'+view);
 if(view==='talents')renderTalents();else renderAbilities();renderInspector();if(view==='talents')requestAnimationFrame(()=>drawDependencyArrows());}
