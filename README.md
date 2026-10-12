@@ -55,4 +55,6 @@ Open `http://localhost:4180/`. All paths are relative, so the same output works 
 
 Game icons and original reference spell data come from [Wowhead](https://www.wowhead.com/forever). Current Forever spell effects and coefficients come from [ForeverDB](https://foreverdb.net), which extracts the Forever client data. Custom designs can be rewritten in Design mode. Custom spec background art was generated for this project. Warcraft game material belongs to its respective owners; this is an unofficial fan project.
 
+The Blood, Unholy, Demon Hunter, and Scarlet Monk backgrounds use a Classic-era painted style generated with the built-in image generation tool. Frost retains its original frozen-citadel image. The [prompt set](assets/spec-backgrounds/classic-art-prompts.json) records the eight generated replacements. Artwork loading is versioned without changing project definitions, saved ranks, or uploaded backgrounds.
+
 Workflow setup follows [GitHub's custom Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
