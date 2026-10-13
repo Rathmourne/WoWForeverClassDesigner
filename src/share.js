@@ -1,8 +1,86 @@
 (function (global) {
   'use strict';
   const maxBytes = 2 * 1024 * 1024;
-  async function encode(project) {
-    const raw = new TextEncoder().encode(JSON.stringify(project));
+  let manifestPromise,baselinePromise;
+  const localHost=()=>/^(?:localhost|127\.0\.0\.1|\[::1\])$/.test(global.location?.hostname||'');
+  function siteUrl(file='designer.html') {
+    return new URL(file,localHost()?'https://rathmourne.github.io/WoWForeverClassDesigner/':global.location?.href||'https://rathmourne.github.io/WoWForeverClassDesigner/').href;
+  }
+  async function manifest() {
+    if(!global.location||global.location.protocol==='file:')return {};
+    return manifestPromise||(manifestPromise=fetch('asset-manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({})));
+  }
+  async function compact(project,assets) {
+    const copy=JSON.parse(JSON.stringify(project)),cache=new Map();
+    assets=assets||await manifest();
+    async function image(value){
+      if(!/^data:image\/(?:png|jpeg|webp);base64,/.test(value))return value;
+      if(!cache.has(value))cache.set(value,(async()=>{
+        const bytes=Uint8Array.from(atob(value.slice(value.indexOf(',')+1)),c=>c.charCodeAt(0));
+        const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
+        const asset=assets[hash];
+        return typeof asset==='string'&&/^assets\/[\w./-]+$/.test(asset)&&!asset.includes('..')?asset:value;
+      })());
+      return cache.get(value);
+    }
+    async function visit(item){await Promise.all(Object.keys(item).map(async key=>{
+      const value=item[key];
+      if(['icon','background'].includes(key)&&typeof value==='string')item[key]=await image(value);
+      else if(value&&typeof value==='object')await visit(value);
+    }));}
+    await visit(copy);return copy;
+  }
+  function pack(project){
+    const copy=JSON.parse(JSON.stringify(project)),images=[],indices=new Map();
+    function visit(item){for(const [key,value] of Object.entries(item)){
+      if(['icon','background'].includes(key)&&typeof value==='string'&&value.startsWith('data:image/')){
+        if(!indices.has(value)){indices.set(value,images.length);images.push(value);}
+        item[key]={$image:indices.get(value)};
+      }else if(value&&typeof value==='object')visit(value);
+    }}
+    visit(copy);return images.length?{shareFormat:2,images,project:copy}:copy;
+  }
+  function unpack(data){
+    if(data.shareFormat!==2)return data;
+    if(!Array.isArray(data.images)||data.images.length>5000||!data.project||typeof data.project!=='object')throw Error('This calculator link is invalid.');
+    let expandedSize=0;
+    function visit(item){for(const [key,value] of Object.entries(item)){
+      if(['icon','background'].includes(key)&&value&&typeof value==='object'&&Object.hasOwn(value,'$image')){
+        const index=value.$image,image=data.images[index];
+        if(!Number.isInteger(index)||index<0||typeof image!=='string'||!/^data:image\/(?:png|jpeg|webp);base64,/.test(image))throw Error('This calculator link has an invalid image reference.');
+        expandedSize+=image.length;
+        if(expandedSize>maxBytes)throw Error('This calculator link exceeds the supported size.');
+        item[key]=image;
+      }else if(value&&typeof value==='object')visit(value);
+    }}
+    visit(data.project);
+    if(new TextEncoder().encode(JSON.stringify(data.project)).length>maxBytes)throw Error('This calculator link exceeds the supported size.');
+    return data.project;
+  }
+  function comparable(c){
+    const copy=JSON.parse(JSON.stringify(c));delete copy.ranks;
+    return JSON.stringify(copy,(_,value)=>value&&typeof value==='object'&&!Array.isArray(value)?Object.fromEntries(Object.keys(value).sort().map(k=>[k,value[k]])):value);
+  }
+  async function publishedLink(project,classId,includeRanks=false,baseline,assets){
+    if(!baseline){
+      if(!global.location||global.location.protocol==='file:')return '';
+      baseline=await (baselinePromise||(baselinePromise=fetch(localHost()?'share-baseline.json':'project.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null)));
+    }
+    if(!baseline)return '';
+    const compacted=await compact(project,assets),c=compacted.classes.find(c=>c.id===classId),published=baseline.classes.find(k=>k.id===classId);
+    if(!c||!published)return '';
+    const normalize=record=>global.TalentForgeCore?global.TalentForgeCore.validateProject({schemaVersion:1,classes:[JSON.parse(JSON.stringify(record))]}).classes[0]:record;
+    if(comparable(normalize(c))!==comparable(normalize(published)))return '';
+    const version=fingerprint(JSON.stringify(baseline.classes.map(c=>({...c,ranks:{}}))));
+    const ranks=published.trees.flatMap(t=>t.talents.map(t=>includeRanks?c.ranks[t.id]||0:0));
+    const url=new URL(siteUrl('./'));url.search='?class='+encodeURIComponent(published.sourceSlug||published.id);
+    url.hash=new URLSearchParams({v:version,class:published.sourceSlug||published.id,b:ranks.map(n=>n.toString(36)).join('').replace(/0+$/,'')||'0'}).toString();
+    return url.href;
+  }
+  async function encode(project,options={}) {
+    const copy=await compact(project,options.assets);
+    if(new TextEncoder().encode(JSON.stringify(copy)).length>maxBytes)throw new Error('This design is too large for a link. Download the calculator file instead.');
+    const raw = new TextEncoder().encode(JSON.stringify(pack(copy)));
     if (raw.length > maxBytes) throw new Error('This design is too large for a link. Download the calculator file instead.');
     const bytes = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
     if (bytes.length > 48000) throw new Error('The selected classes are too large for a link. Download the calculator file instead.');
@@ -21,7 +99,7 @@
         chunks.push(result.value);
       }
     } finally { await reader.cancel(); }
-    return JSON.parse(await new Blob(chunks).text());
+    return unpack(JSON.parse(await new Blob(chunks).text()));
   }
   function fingerprint(text) {
     let hash = 2166136261;
@@ -78,7 +156,7 @@
       .replace(/<script src="classic-artwork\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(artwork) + '</script>')
       .replace(/<script src="app\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(app) + '</script>');
   }
-  const api = { encode, decode, fingerprint, standalone, storageKey, snapshot };
+  const api = { encode, decode, fingerprint, standalone, storageKey, snapshot, compact, publishedLink, siteUrl };
   global.TalentForgeShare = api;
   if (typeof module !== 'undefined') module.exports = api;
 })(typeof window === 'undefined' ? globalThis : window);

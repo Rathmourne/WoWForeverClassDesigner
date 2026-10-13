@@ -15,16 +15,23 @@
     C.normalizeRanks(c);return c;
   }
   function encode(project,c){
-    return new URLSearchParams({v:version(project),class:c.id,ranks:talents(c).map(t=>c.ranks[t.id]||0).join(',')}).toString();
+    const compact=talents(c).map(t=>(c.ranks[t.id]||0).toString(36)).join('').replace(/0+$/,'')||'0';
+    return new URLSearchParams({v:version(project),class:c.sourceSlug||c.id,b:compact}).toString();
   }
   function apply(project,hash){
     if(hash.length>4000)throw Error('This build link is too large.');
     const p=new URLSearchParams(hash.replace(/^#/,''));
     if(p.get('v')!==version(project))throw Error('This link belongs to another version of the class designs. Start a new build.');
-    const c=project.classes.find(c=>c.id===p.get('class'));
+    const c=project.classes.find(c=>c.id===p.get('class')||c.sourceSlug===p.get('class'));
     if(!c)throw Error('This build uses an unavailable class.');
-    const raw=p.get('ranks')||'',list=raw.split(',');
-    if(!/^\d{1,2}(,\d{1,2})*$/.test(raw)||list.length!==talents(c).length)throw Error('This build link has invalid ranks.');
+    const raw=p.get('ranks')||'',compact=p.get('b');let list;
+    if(compact!==null){
+      if(!/^[0-9a]+$/.test(compact)||compact.length>talents(c).length)throw Error('This build link has invalid ranks.');
+      list=Array.from({length:talents(c).length},(_,i)=>i<compact.length?parseInt(compact[i],36):0);
+    }else{
+      list=raw.split(',');
+      if(!/^\d{1,2}(,\d{1,2})*$/.test(raw)||list.length!==talents(c).length)throw Error('This build link has invalid ranks.');
+    }
     const ranks=Object.fromEntries(talents(c).map((t,i)=>[t.id,Number(list[i])]));
     restore(c,ranks);return c;
   }

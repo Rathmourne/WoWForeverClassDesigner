@@ -463,12 +463,13 @@ const $ = id => document.getElementById(id);
     let link='',message='';
     try {
       if(location.protocol==='file:')throw new Error('This is a standalone calculator file. Send this file to share it.');
-      const encoded=await Share.encode(calculatorSnapshot());
-      const url=new URL(location.href);url.search='?play=1';url.hash='project='+encoded;link=url.href;
-      if(['127.0.0.1','localhost'].includes(url.hostname))message='This preview link works on your computer. Use the hosted site to create links for friends, or download the calculator below.';
+      const snapshot=calculatorSnapshot();
+      if(shareScope==='current')link=await Share.publishedLink(snapshot,current().id,playMode||shareIncludeRanks);
+      if(link)message='Compact build link · Uses the published class and saves your friend’s points separately.';
+      else{const encoded=await Share.encode(snapshot);const url=new URL(Share.siteUrl());url.search='?play=1';url.hash='project='+encoded;link=url.href;}
     }catch(error){message=error.message;}
     if(!$('editor-dialog').open)return;
-    dialog(playMode?'Share your build':'Share design',`<div class="dialog-form"><p>${playMode?'Share your current points and the complete class design.':'Share a preview of your class designs and abilities. Your recipient’s existing local creations stay untouched.'} Shared previews save their points separately from personal builds and designs.</p>${selectField("Classes to share","share-scope",shareScope,[["current",current().name+" only"],["all","All classes (file export for large projects)"]])}${!playMode?`<label class="share-rank-option"><input type="checkbox" name="share-ranks" ${shareIncludeRanks?'checked':''}> Include current talent points</label>`:''}${link?`<label>Design preview link<input id="calculator-link" aria-label="Design preview link" readonly value="${esc(link)}"></label><button class="gold" data-action="copy-calculator-link">Copy link</button>`:''}<p class="help">${esc(message||'No sign-in required. A link captures this version of your design; share a new link after editing it.')}</p>${location.protocol==='file:'?'':`<div class="share-download"><h3>Standalone calculator</h3><p>Includes the selected classes, abilities, and artwork in one HTML file. Friends can open it in a browser without hosting or sign-in. Anyone you send the file to can use it.</p><button class="secondary" data-action="download-calculator">Download calculator file</button></div>`}</div>`);
+    dialog(playMode?'Share your build':'Share design',`<div class="dialog-form"><p>${playMode||shareIncludeRanks?'Share your current points and the complete class design.':'Share a preview of your class designs and abilities. Your recipient’s existing local creations stay untouched.'} Shared previews save their points separately from personal builds and designs.</p>${selectField("Classes to share","share-scope",shareScope,[["current",current().name+" only"],["all","All classes (file export for large projects)"]])}${!playMode?`<label class="share-rank-option"><input type="checkbox" name="share-ranks" ${shareIncludeRanks?'checked':''}> Include current talent points</label>`:''}${link?`<label>Design preview link<input id="calculator-link" aria-label="Design preview link" readonly value="${esc(link)}"></label><button class="gold" data-action="copy-calculator-link">Copy link</button>`:''}<p class="help">${esc(message||'No sign-in required. A link captures this version of your design; share a new link after editing it.')}</p>${location.protocol==='file:'?'':`<div class="share-download"><h3>Standalone calculator</h3><p>Includes the selected classes, abilities, and artwork in one HTML file. Friends can open it in a browser without hosting or sign-in. Anyone you send the file to can use it.</p><button class="secondary" data-action="download-calculator">Download calculator file</button></div>`}</div>`);
   }
   async function downloadCalculator(button) {
     button.disabled=true;button.textContent='Bundling artwork…';
@@ -617,7 +618,7 @@ const $ = id => document.getElementById(id);
   $('class-settings').addEventListener('click',()=>{if(!playMode)classDialog();});$('add-class').addEventListener('click',()=>{if(!playMode)classDialog(true);});
   $('open-library').addEventListener('click',()=>{if(!playMode){view='library';selection=null;libraryPage=0;libraryQuery='';render();}});
   $('undo').addEventListener('click',undo);$('redo').addEventListener('click',redo);
-  $('export-project').addEventListener('click',()=>exportDownload({...project,exportedAt:new Date().toISOString()},'wow-forever-class-designer-project.json'));
+  $('export-project').addEventListener('click',async()=>{try{exportDownload({...await Share.compact(project),exportedAt:new Date().toISOString()},'wow-forever-class-designer-project.json');}catch(error){toast('Export failed: '+error.message);}});
   $('share-calculator').addEventListener('click',shareCalculator);
   $('import-project').addEventListener('click',()=>{if(!playMode){$('import-file').value='';$('import-file').click();}});
   $('import-file').addEventListener('change',async event=>{

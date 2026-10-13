@@ -31,6 +31,8 @@ Commit authorship uses a GitHub noreply address, and sanitized commit timestamps
 
 Click **Share design** in the designer. The link includes a snapshot of the selected class's definitions and abilities and opens a calculator preview. **Include current talent points** optionally adds the author's allocation. Each shared preview uses separate browser storage from the recipient's designer drafts and normal builds. Viewing or changing a shared preview never imports it over the recipient's existing creation. **Import** remains an explicit action in the designer.
 
+When the selected design matches the published class, sharing uses a compact build link containing only its version, class and point allocations. Unpublished rewrites use a gzip-compressed snapshot. Images already hosted by the site are referenced by path, and repeated custom images are included only once. The full JSON export also reuses hosted images without modifying the saved browser draft. Local studio share links point to the hosted calculator so friends can open them directly. Unknown uploaded images remain embedded; image-heavy custom designs may still require a standalone file.
+
 ## Spell damage modifiers
 
 Every ability and talent has an editable **Spell damage modifiers** field. Ability details display the modifier text and imported effect rows. Database templates copy these values independently so you can rewrite them.

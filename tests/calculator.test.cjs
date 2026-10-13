@@ -16,7 +16,17 @@ test('Each class shares and restores an independent build',()=>{
 test('Old design versions and malformed ranks do not overwrite a build',()=>{
   const p=fresh(),c=p.classes[0],hash=B.encode(p,c),before=JSON.stringify(c.ranks);
   assert.throws(()=>B.apply(p,hash.replace(/v=[^&]+/,'v=old')),/another version/);
-  assert.throws(()=>B.apply(p,hash.replace(/ranks=.*/,'ranks=NaN')),/invalid ranks/);
+  assert.throws(()=>B.apply(p,hash.replace(/b=.*/,'b=NaN')),/invalid ranks/);
+  assert.equal(JSON.stringify(c.ranks),before);
+});
+
+test('legacy comma-separated point links still restore and compact links reject invalid ranks before mutation',()=>{
+  const p=fresh(),c=p.classes[0],items=c.trees.flatMap(t=>t.talents),values=items.map((t,i)=>i===0?1:0);
+  const old=new URLSearchParams({v:B.version(p),class:c.id,ranks:values.join(',')}).toString();
+  assert.equal(B.apply(p,old).ranks[items[0].id],1);
+  const before=JSON.stringify(c.ranks);
+  assert.throws(()=>B.apply(p,new URLSearchParams({v:B.version(p),class:c.id,b:'z'}).toString()),/invalid ranks/);
+  assert.throws(()=>B.apply(p,new URLSearchParams({v:B.version(p),class:c.id,b:'1'.repeat(items.length+1)}).toString()),/invalid ranks/);
   assert.equal(JSON.stringify(c.ranks),before);
 });
 test('Restored ranks respect caps, tier requirements, prerequisites and budget',()=>{
