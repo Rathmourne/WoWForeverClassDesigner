@@ -19,6 +19,7 @@ test('published class links stay under 200 characters and preserve exact allocat
  const input=inlineCopy(),first=input.classes[0].trees[0].talents[0];input.classes[0].ranks[first.id]=first.maxRanks;
  const link=await Share.publishedLink(input,dh.id,true,project,assets);
  assert.ok(link.length>0&&link.length<200,link.length);
+ assert.equal(new URL(link).searchParams.get('share'),'2');
  const restored=C.clone(project),result=Build.apply(restored,new URL(link).hash);
  assert.equal(result.ranks[first.id],first.maxRanks);
  assert.notEqual(Build.storageKey(project),Build.storageKey(project,new URL(link).hash));

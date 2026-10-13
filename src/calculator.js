@@ -131,7 +131,7 @@ document.addEventListener('pointerout',event=>{if(event.target.closest('[data-ta
 document.addEventListener('focusin',event=>{const node=event.target.closest('[data-talent-id]');if(node)tooltipFor(node);});
 document.addEventListener('focusout',event=>{if(event.target.closest('[data-talent-id]'))$('tooltip').hidden=true;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')$('tooltip').hidden=true;});
-$('share-build').addEventListener('click',()=>{const url=new URL(location.href);url.search='';url.hash=B.encode(project,current());$('build-link').value=url.href;$('share-dialog').showModal();});
+$('share-build').addEventListener('click',()=>{const url=new URL(location.href);url.search='?share=2';url.hash=B.encode(project,current());$('build-link').value=url.href;$('share-dialog').showModal();});
 $('copy-link').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('build-link').value);toast('Build link copied.');}catch{$('build-link').focus();$('build-link').select();toast('Copy the selected link.');}});
 $('close-share').addEventListener('click',()=>$('share-dialog').close());
 window.addEventListener('hashchange',()=>{try{loadBuild(location.hash);view='talents';selectDefault();render();}catch(error){toast(error.message);}});

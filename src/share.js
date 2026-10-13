@@ -73,7 +73,7 @@
     if(comparable(normalize(c))!==comparable(normalize(published)))return '';
     const version=fingerprint(JSON.stringify(baseline.classes.map(c=>({...c,ranks:{}}))));
     const ranks=published.trees.flatMap(t=>t.talents.map(t=>includeRanks?c.ranks[t.id]||0:0));
-    const url=new URL(siteUrl('./'));url.search='?class='+encodeURIComponent(published.sourceSlug||published.id);
+    const url=new URL(siteUrl('./'));url.search='?class='+encodeURIComponent(published.sourceSlug||published.id)+'&share=2';
     url.hash=new URLSearchParams({v:version,class:published.sourceSlug||published.id,b:ranks.map(n=>n.toString(36)).join('').replace(/0+$/,'')||'0'}).toString();
     return url.href;
   }
