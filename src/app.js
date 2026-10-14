@@ -166,8 +166,9 @@ const $ = id => document.getElementById(id);
     try {
       const saved = playMode ? Object.fromEntries(project.classes.map(c => [c.id, c.ranks])) : project;
       localStorage.setItem(storageKey, JSON.stringify(saved)); $('save-status').textContent = playMode ? 'Your build is saved' : 'Saved on this device';
+      return true;
     }
-    catch (error) { $('save-status').textContent = 'Storage unavailable'; toast('Browser storage is unavailable or full. Use Share to keep a copy.'); }
+    catch (error) { $('save-status').textContent = 'Storage unavailable'; toast('Browser storage is unavailable or full. Use Share to keep a copy.'); return false; }
   }
   function mutate(action) {
     const before = C.clone(project); action();
@@ -670,5 +671,9 @@ const $ = id => document.getElementById(id);
     $('share-calculator').textContent='Share build ↗';
     document.querySelector('.breadcrumb').insertAdjacentHTML('afterend','<p class="shared-notice">Shared design preview · Its points are saved separately. Your local creations stay untouched.</p>');
   }
-  selectDefault();render();if(!playMode)save();if(restoreMessage)toast(restoreMessage);
+  selectDefault();render();
+  if(!playMode&&save()&&(entry.has('handoff')||entry.has('source'))){
+    const url=new URL(location.href);url.searchParams.delete('handoff');url.searchParams.delete('source');history.replaceState(null,'',url.href);
+  }
+  if(restoreMessage)toast(restoreMessage);
 })();
