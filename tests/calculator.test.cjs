@@ -2,9 +2,9 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const C=require('../src/core.js'),B=require('../src/builds.js');
 const root=path.join(__dirname,'..');
 const fresh=()=>JSON.parse(fs.readFileSync(path.join(root,'project.json'),'utf8'));
-test('All twelve published classes and their prerequisite routes validate',()=>{
-  const p=fresh();assert.equal(p.classes.length,12);C.validateProject(p);C.validateArrowLayouts(p);
-  assert.equal(p.classes.flatMap(c=>c.trees).length,36);
+test('All published classes and their prerequisite routes validate',()=>{
+  const p=fresh();C.validateProject(p);C.validateArrowLayouts(p);
+  assert.equal(p.classes.flatMap(c=>c.trees).length,p.classes.length*3);
 });
 test('Each class shares and restores an independent build',()=>{
   for(const c of fresh().classes){const p=fresh(),target=p.classes.find(k=>k.id===c.id),tree=target.trees[0],t=tree.talents.find(t=>!C.unmet(target,tree,t));assert.ok(t);

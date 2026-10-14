@@ -4,14 +4,14 @@ const project=()=>JSON.parse(fs.readFileSync(path.join(__dirname,'../project.jso
 class Storage{
  constructor(){this.items=new Map();}get length(){return this.items.size;}key(i){return [...this.items.keys()][i]||null;}getItem(k){return this.items.get(k)||null;}setItem(k,v){this.items.set(k,String(v));}removeItem(k){this.items.delete(k);}
 }
-test('calculator to designer carries the complete 19/20/18 DH with all 16 abilities and preserves other classes',()=>{
+test('calculator to designer carries the complete current DH talents and abilities and preserves other classes',()=>{
  const s=new Storage(),p=project(),incoming=C.clone(p.classes.find(c=>c.sourceSlug==='demon-hunter'));
  const old=p.classes.find(c=>c.id===incoming.id);old.trees[0].talents.pop();old.abilities=old.abilities.slice(0,3);
  const others=C.clone(p.classes.filter(c=>c.id!==incoming.id)),before=C.clone(p);
  const token=W.stage(s,incoming),carried=W.receive(s,token),merged=W.sync(s,p,carried);
  assert.deepEqual(p,before);assert.deepEqual(merged.classes.filter(c=>c.id!==incoming.id),others);
  const result=merged.classes.find(c=>c.id===incoming.id);
- assert.deepEqual(result.trees.map(t=>t.talents.length),[19,20,18]);assert.equal(result.abilities.length,16);
+ assert.deepEqual(result.trees,incoming.trees);assert.deepEqual(result.abilities,incoming.abilities);
  assert.equal(W.previous(s,incoming.id).classes[0].abilities.length,3);
 });
 test('designer to calculator to designer preserves unpublished ability rewrites and selected points',()=>{

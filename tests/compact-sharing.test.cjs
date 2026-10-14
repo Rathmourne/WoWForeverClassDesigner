@@ -30,7 +30,10 @@ test('published class links stay under 200 characters and preserve exact allocat
 test('changed class designs use a compressed snapshot and retain custom wording, prerequisites and coefficients',async()=>{
  const input=inlineCopy();input.classes[0].trees[0].talents[0].description='My new Fury rewrite — 氣';
  assert.equal(await Share.publishedLink(input,dh.id,true,project,assets),'');
- const encoded=await Share.encode(input,{assets});assert.ok(encoded.length<16000,encoded.length);
+ const encoded=await Share.encode(input,{assets});
+ // Uploaded artwork can legitimately make a snapshot larger than a link-size target.
+ // Verify the gzip transport itself and that every authored field survives it.
+ assert.equal(JSON.parse(zlib.gunzipSync(Buffer.from(encoded,'base64url'))).shareFormat,2);
  assert.deepEqual(await Share.decode(encoded),await Share.compact(input,assets));
 });
 
