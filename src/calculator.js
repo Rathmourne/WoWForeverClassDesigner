@@ -1,6 +1,6 @@
 (async function(){
 'use strict';
-const C=window.TalentForgeCore,B=window.TalentForgeBuild;
+const C=window.TalentForgeCore,B=window.TalentForgeBuild,W=window.TalentForgeWorkspace,S=window.TalentForgeShare;
 const bottomClasses = new Set(['death-knight','demon-hunter','monk']);
 const classNavigation = classes => [...classes].sort((a,b) => Number(bottomClasses.has(a.sourceSlug))-Number(bottomClasses.has(b.sourceSlug)));
 const artworkUrl = value => /^assets\/spec-backgrounds\/(?:blood|unholy|havoc|vengeance|felcraft|martial-arts|zealot|devotion)\.webp$/.test(value) ? value+'?v=20261012-classic1' : value;
@@ -9,6 +9,7 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;
 let project;
 try{const response=await fetch('project.json',{cache:'no-cache'});if(!response.ok)throw Error('Class data could not be loaded.');project=C.validateProject(await response.json());}
 catch(error){$('canvas').textContent=error.message;return;}
+const publishedProject=C.clone(project);
 let storageKey=B.storageKey(project,location.hash);
 const entry = new URLSearchParams(location.search);
 const requestedClass = project.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
@@ -26,8 +27,14 @@ function loadBuild(hash){
   $('shared-notice').hidden=!hash;if(hash)save();
 }
 try{loadBuild(location.hash);}catch(error){toast(error.message);}
+if(entry.get('handoff'))try{
+  const carried=W.receive(localStorage,entry.get('handoff'));
+  if(carried){project=W.sync(localStorage,project,carried);activeId=carried.id;storageKey=B.storageKey(project,'workspace='+entry.get('handoff'));
+    try{const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if(saved[carried.id])B.restore(current(),saved[carried.id]);}catch{}
+    save();}
+}catch(error){toast(error.message);}
 function render(){const c=current();document.documentElement.style.setProperty('--class',c.color);$('tooltip').hidden=true;
-document.querySelector('.designer-link').href='designer.html?'+new URLSearchParams({class:c.id,view,mode:'design'});
+document.querySelector('.designer-link').href='designer.html?'+new URLSearchParams({class:c.id,view,mode:'design',source:entry.get('handoff')?'working':'published',ui:'20261014-mode1'});
 $('class-list').innerHTML=classNavigation(project.classes).map(k=>`<button class="class-nav ${k.id===c.id?'active':''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id===c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t=>esc(t.name)).join(' · ')}</small></div></button>`).join('');
 for(const id of ['class-name','breadcrumb-class'])$(id).textContent=c.name;$('class-description').textContent=c.description;$('class-icon').src=c.icon;$('ability-count').textContent=c.abilities.length;
 for(const name of ['talents','abilities']){$('tab-'+name).classList.toggle('active',view===name);$('tab-'+name).setAttribute('aria-selected',view===name);} $('workspace').setAttribute('aria-labelledby','tab-'+view);
@@ -131,7 +138,18 @@ document.addEventListener('pointerout',event=>{if(event.target.closest('[data-ta
 document.addEventListener('focusin',event=>{const node=event.target.closest('[data-talent-id]');if(node)tooltipFor(node);});
 document.addEventListener('focusout',event=>{if(event.target.closest('[data-talent-id]'))$('tooltip').hidden=true;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')$('tooltip').hidden=true;});
-$('share-build').addEventListener('click',()=>{const url=new URL(location.href);url.search='?share=2';url.hash=B.encode(project,current());$('build-link').value=url.href;$('share-dialog').showModal();});
+$('share-build').addEventListener('click',async()=>{
+  $('build-link').value='Preparing link…';$('share-dialog').showModal();
+  try{const snapshot=S.snapshot(project,current().id,'current',true);
+    let link=await S.publishedLink(snapshot,current().id,true,publishedProject);
+    if(!link){const url=new URL('designer.html',location.href);url.search='?play=1&share=2';url.hash='project='+await S.encode(snapshot);link=url.href;}
+    $('build-link').value=link;
+  }catch(error){$('build-link').value='';toast(error.message);}
+});
+document.querySelector('.designer-link').addEventListener('click',event=>{
+  try{const url=new URL(event.currentTarget.href);url.searchParams.set('handoff',W.stage(localStorage,current()));event.currentTarget.href=url.href;}
+  catch(error){event.preventDefault();toast('Could not switch modes: '+error.message);}
+});
 $('copy-link').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('build-link').value);toast('Build link copied.');}catch{$('build-link').focus();$('build-link').select();toast('Copy the selected link.');}});
 $('close-share').addEventListener('click',()=>$('share-dialog').close());
 window.addEventListener('hashchange',()=>{try{loadBuild(location.hash);view='talents';selectDefault();render();}catch(error){toast(error.message);}});

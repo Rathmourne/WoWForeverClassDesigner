@@ -7,7 +7,7 @@ const project=C.validateProject(JSON.parse(fs.readFileSync(path.join(root,'proje
 C.validateArrowLayouts(project);
 for(const c of project.classes)c.ranks={};
 fs.mkdirSync(out,{recursive:true});
-for(const name of ['index.html','designer.html','styles.css','core.js','builds.js','calculator.js','app.js','classic-artwork.js','library-tools.js','share.js','reference-data.js','forever-data.js','icon-catalog.js'])fs.copyFileSync(path.join(root,'src',name),path.join(out,name));
+for(const name of ['index.html','designer.html','styles.css','core.js','builds.js','calculator.js','app.js','workspace.js','classic-artwork.js','library-tools.js','share.js','reference-data.js','forever-data.js','icon-catalog.js'])fs.copyFileSync(path.join(root,'src',name),path.join(out,name));
 fs.cpSync(path.join(root,'assets'),path.join(out,'assets'),{recursive:true});
 const imageManifest={};
 function indexImages(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){

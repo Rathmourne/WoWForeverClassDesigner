@@ -150,6 +150,7 @@
       .replace('<script src="reference-data.js"></script>', () => '<script>window.WOW_REFERENCE=[];window.TALENT_FORGE_SHARED_PROJECT=' + data + ';</script>')
       .replace('<script src="published-design.js"></script>', '')
       .replace(/<script src="forever-data\.js(?:\?[^"]*)?"><\/script>/, '')
+      .replace(/<script src="workspace\.js(?:\?[^"]*)?"><\/script>/, '')
       .replace(/<script src="core\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(core) + '</script>')
       .replace(/<script src="library-tools\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(library) + '</script>')
       .replace(/<script src="share\.js(?:\?[^"]*)?"><\/script>/, () => '<script>' + safeScript(sharing) + '</script>')

@@ -2,6 +2,8 @@
   'use strict';
   const C = window.TalentForgeCore;
   const Library = window.TalentForgeLibrary;
+  const Workspace = window.TalentForgeWorkspace;
+  const entry = new URLSearchParams(location.search);
   const references = window.WOW_REFERENCE || [];
   const allEntries = references.flatMap(c => c.entries.map(e => ({ ...e, className: c.name, classSlug: c.slug, gameVersion: c.gameVersion })));
   const bottomClasses = new Set(['death-knight','demon-hunter','monk']);
@@ -96,6 +98,8 @@ const $ = id => document.getElementById(id);
   }
   function freshProject() { return renameStarterMonkSpecs(C.fixStarterArrows(window.TALENT_FORGE_DEFAULT_PROJECT ? C.clone(window.TALENT_FORGE_DEFAULT_PROJECT) : { schemaVersion: 1, title: 'Classic class workshop', classes: seeds.map(seedClass) })); }
   let project = freshProject();
+  let publishedProject=project;
+  if(!playMode){try{const response=await fetch('project.json',{cache:'no-cache'});if(response.ok){publishedProject=C.validateProject(await response.json());project=C.clone(publishedProject);}}catch{}}
   let restoreMessage = '';
   if (playMode && (embeddedProject || sharedPayload)) {
     try { project = C.validateProject(C.fixStarterArrows(embeddedProject ? C.clone(embeddedProject) : await Share.decode(sharedPayload))); }
@@ -113,19 +117,34 @@ const $ = id => document.getElementById(id);
     }
   }
   catch (error) { restoreMessage = 'A saved project could not be loaded. The starter classes are available; import a backup to recover your work.'; }
+  if(!playMode){
+    try{
+      const carried=Workspace.receive(localStorage,entry.get('handoff'));
+      const requested=publishedProject.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
+      if(carried){project=Workspace.sync(localStorage,project,carried);restoreMessage=carried.name+' opened from the calculator.';}
+      else for(const published of publishedProject.classes){
+        const saved=project.classes.find(c=>c.id===published.id);
+        if((published.id===requested?.id&&entry.get('source')==='published')||(published.designVersion&&saved&&saved.designVersion!==published.designVersion)){
+          project=Workspace.sync(localStorage,project,published);restoreMessage=published.name+' updated to the published class. Its previous copy is backed up.';
+        }
+      }
+    }catch(error){restoreMessage='Could not switch class versions: '+error.message;}
+  }
   const newArtwork=Library.migrateStarterArtwork(project);
   const newClasses=!embeddedProject&&!sharedPayload&&Library.mergeForeverClasses(project,window.WOW_FOREVER_CLASSES||[]);
   const newSpellDetails=Library.hydrateSpellDetails(project,references);
   if((newArtwork||newClasses||newSpellDetails)&&!playMode){
     try{localStorage.setItem(storageKey,JSON.stringify(project));}catch(error){restoreMessage='Spec backgrounds applied. Export a backup if browser storage is full.';}
   }
-  const entry = new URLSearchParams(location.search);
   const requestedClass = project.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
   let activeId = requestedClass?.id || classNavigation(project.classes)[0].id, view = entry.get('view')==='abilities'?'abilities':'talents', mode = !playMode&&entry.get('mode')==='design'?'design':'build', selection = null;
   let libraryQuery = '', libraryKind = 'All', libraryPage = 0;
   let abilityQuery='',shareScope='current',shareIncludeRanks=false;
   let undoStack = [], redoStack = [], toastTimer;
   const current = () => project.classes.find(c => c.id === activeId) || project.classes[0];
+  const priorClassButton=document.createElement('button');priorClassButton.className='quiet';priorClassButton.textContent='Export previous class';priorClassButton.hidden=true;
+  $('export-project').before(priorClassButton);
+  priorClassButton.addEventListener('click',()=>{const backup=Workspace.previous(localStorage,current().id);if(backup)exportDownload(backup,'previous-'+slug(current().name)+'-class.json');});
   function selected() {
     const c = current();
     if (selection?.kind === 'talent') {
@@ -172,6 +191,7 @@ const $ = id => document.getElementById(id);
     if (!selected()) selectDefault(); save(); render(); toast('Change restored.');
   }
   function render() {
+    priorClassButton.hidden=playMode||!Workspace.previous(localStorage,current().id);
     document.querySelector('.calculator-home').href='./?'+new URLSearchParams({class:current().id,view:view==='abilities'?'abilities':'talents'});
     const c = current(); document.documentElement.style.setProperty('--class', c.color);
     $('class-list').innerHTML=classNavigation(project.classes).map(k => `<button class="class-nav ${k.id === c.id ? 'active' : ''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id === c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t => esc(t.name)).join(' · ')}</small></div></button>`).join('');
@@ -620,6 +640,11 @@ const $ = id => document.getElementById(id);
   $('undo').addEventListener('click',undo);$('redo').addEventListener('click',redo);
   $('export-project').addEventListener('click',async()=>{try{exportDownload({...await Share.compact(project),exportedAt:new Date().toISOString()},'wow-forever-class-designer-project.json');}catch(error){toast('Export failed: '+error.message);}});
   $('share-calculator').addEventListener('click',shareCalculator);
+  document.querySelector('.calculator-home').addEventListener('click',event=>{
+    if(playMode)return;
+    try{const url=new URL(event.currentTarget.href);url.searchParams.set('handoff',Workspace.stage(localStorage,current()));url.searchParams.set('ui','20261014-mode1');event.currentTarget.href=url.href;}
+    catch(error){event.preventDefault();toast('Could not switch modes: '+error.message);}
+  });
   $('import-project').addEventListener('click',()=>{if(!playMode){$('import-file').value='';$('import-file').click();}});
   $('import-file').addEventListener('change',async event=>{
     const file=event.target.files[0];if(!file)return;

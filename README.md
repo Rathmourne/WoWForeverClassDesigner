@@ -14,6 +14,8 @@ Updates run validation automatically. They do **not** publish automatically; run
 
 The main page is the calculator. Click **Design mode** to open `designer.html`. Anyone can create or rewrite a copy of a class there. Changes are saved in that person's browser and can be exported or shared; they do not change the calculator's published defaults or anyone else's drafts. GitHub repository write access controls who can publish updates.
 
+Switching between Calculator and Design carries the entire selected class, including all talent definitions, abilities and allocated points. Returning to Calculator previews your current edits. A previously saved version of the selected class is backed up before replacement; **Export previous class** retrieves it without resetting any other classes. When a newly published class has a newer design version, the editor updates that class and retains its prior copy as a backup.
+
 Class definitions and images are public once deployed. This static website does not provide authenticated private data storage or a shared editing service. Drafts use separate local storage from point builds. There is no server upload, tracking code or remote font request; outbound reference links open only when clicked. Clearing site data removes local drafts, so export a backup.
 
 ## Update class definitions
