@@ -1251,7 +1251,7 @@
     {
       "id": "class-6e6deb27-3cfc-414d-b41e-10842ab138d6",
       "name": "Demon Hunter",
-      "description": "Agility-fueled warglaives. Passive Fury from white attacks, Felblade on cooldown and resource-driven Chaos Strikes. Havoc hunts one target; Vengeance survives through avoidance and Leech; Devastation blends melee, sigils and Eye Beam.",
+      "description": "Agility focused, Fury fueled melee Assassin",
       "color": "#aa89d4",
       "icon": "assets/wowhead/class_demonhunter.jpg",
       "sourceSlug": "demon-hunter",
@@ -1396,7 +1396,8 @@
             "url": "https://www.wowhead.com/forever/spell=19878",
             "version": "WoW Forever 1.60.1 · BlizzCon reference snapshot"
           },
-          "sourceMissingDescription": false
+          "sourceMissingDescription": false,
+          "spellDetailVersion": 2
         },
         {
           "id": "dh-ability-disrupt",
@@ -1652,7 +1653,76 @@
             "url": "https://www.wowhead.com/spell=278326",
             "version": "Retail 12.1.0 / Midnight"
           },
-          "sourceMissingDescription": false
+          "sourceMissingDescription": false,
+          "damageModifiers": "",
+          "effectDetails": [],
+          "detailStatus": "unavailable",
+          "detailSourceUrl": "https://www.wowhead.com/spell=278326",
+          "detailSourceVersion": "",
+          "spellDetailVersion": 2
+        },
+        {
+          "id": "ability-21477fd5-b07f-4aa7-a616-69a99c5063f9",
+          "name": "Demon Spikes (Rank 1)",
+          "icon": "assets/wowhead/ability_demonhunter_demonspikes.jpg",
+          "description": "Double Parry and Dodge Chance for 1 second.",
+          "type": "Active",
+          "level": 20,
+          "cost": "20 Fury",
+          "castTime": "Instant",
+          "cooldown": "12 seconds",
+          "range": "Self",
+          "school": "Unspecified",
+          "effects": "",
+          "source": {
+            "spellId": 203720,
+            "url": "https://www.wowhead.com/spell=203720",
+            "version": "Retail 12.1.0 / Midnight"
+          },
+          "sourceMissingDescription": false,
+          "damageModifiers": ""
+        },
+        {
+          "id": "ability-ee0717c6-d8b7-47a8-8215-aa40f103d7cc",
+          "name": "Demon Spikes (Rank 2)",
+          "icon": "assets/wowhead/ability_demonhunter_demonspikes.jpg",
+          "description": "Double Parry and Dodge Chance for 1 second.",
+          "type": "Active",
+          "level": 40,
+          "cost": "20 Fury",
+          "castTime": "Instant",
+          "cooldown": "10 seconds",
+          "range": "Self",
+          "school": "Unspecified",
+          "effects": "",
+          "source": {
+            "spellId": 203720,
+            "url": "https://www.wowhead.com/spell=203720",
+            "version": "Retail 12.1.0 / Midnight"
+          },
+          "sourceMissingDescription": false,
+          "damageModifiers": ""
+        },
+        {
+          "id": "ability-2b528be3-c350-4c27-b9c6-d5ffc1d4ed1f",
+          "name": "Demon Spikes (Rank 3)",
+          "icon": "assets/wowhead/ability_demonhunter_demonspikes.jpg",
+          "description": "Double Parry and Dodge Chance for 2 second.",
+          "type": "Active",
+          "level": 60,
+          "cost": "20 Fury",
+          "castTime": "Instant",
+          "cooldown": "8 sec cooldown",
+          "range": "Self",
+          "school": "Unspecified",
+          "effects": "",
+          "source": {
+            "spellId": 203720,
+            "url": "https://www.wowhead.com/spell=203720",
+            "version": "Retail 12.1.0 / Midnight"
+          },
+          "sourceMissingDescription": false,
+          "damageModifiers": ""
         }
       ],
       "trees": [
@@ -1698,7 +1768,7 @@
             {
               "id": "dh-havoc-precision",
               "name": "Precision",
-              "icon": "assets/wowhead/ability_demonhunter_eyebeam.jpg",
+              "icon": "assets/designer/cabc6f819e71ded4cfc73be0d9225fd39d5cf182256a98d2d09f702e506bde49.png",
               "row": 0,
               "col": 1,
               "maxRanks": 5,
@@ -1760,7 +1830,7 @@
             {
               "id": "dh-havoc-dual-wield-specialization",
               "name": "Dual Wield Specialization",
-              "icon": "assets/wowhead/ability_demonhunter_eyebeam.jpg",
+              "icon": "assets/designer/c2bb1f9d200e233c8f8d63eb116f4e175ac47c8c5370cdc1d9f500d8c33c8b45.png",
               "row": 2,
               "col": 0,
               "maxRanks": 5,
@@ -1884,7 +1954,7 @@
             {
               "id": "dh-havoc-unrelenting-strikes",
               "name": "Unrelenting Strikes",
-              "icon": "assets/wowhead/ability_demonhunter_eyebeam.jpg",
+              "icon": "assets/designer/36d485bf04a79b6b5524719c4f0160856ef2cde3278067ef0cf984332183a5f3.png",
               "row": 1,
               "col": 2,
               "maxRanks": 2,
@@ -1979,7 +2049,7 @@
               "id": "dh-havoc-blade-dance",
               "name": "Blade Dance",
               "icon": "assets/wowhead/ability_demonhunter_bladedance.jpg",
-              "row": 3,
+              "row": 4,
               "col": 0,
               "maxRanks": 1,
               "requiredPoints": null,
@@ -2074,8 +2144,8 @@
             {
               "id": "dh-havoc-improved-blade-dance",
               "name": "Improved Blade Dance",
-              "icon": "assets/wowhead/ability_demonhunter_bladedance.jpg",
-              "row": 4,
+              "icon": "assets/designer/15f9ae256b35657df2416eee5da5d2edef820894da2f828e97f67515616cfce9.png",
+              "row": 5,
               "col": 0,
               "maxRanks": 2,
               "requiredPoints": null,
@@ -2256,7 +2326,7 @@
               "name": "Thick Skin",
               "icon": "assets/wowhead/sha_spell_warlock_demonsoul.jpg",
               "row": 0,
-              "col": 0,
+              "col": 1,
               "maxRanks": 3,
               "requiredPoints": null,
               "description": "Increases the Armor contribution of your equipment by {value}%.",
@@ -2288,8 +2358,8 @@
               "id": "talent-32839ed6-393c-4e60-8261-1c8cd5b459a8",
               "name": "Fel Flame Fortification",
               "icon": "assets/wowhead/spell_fire_felfire.jpg",
-              "row": 0,
-              "col": 1,
+              "row": 4,
+              "col": 2,
               "maxRanks": 5,
               "requiredPoints": null,
               "description": "Dealing Fire damage reduces damage you take by {value}% for 4 sec. Refreshes rather than stacking.",
@@ -2308,12 +2378,19 @@
               "detailSourceVersion": "Custom Forever-inspired Demon Hunter draft",
               "spellDetailVersion": 2,
               "effectDetails": [],
-              "damageModifiers": ""
+              "damageModifiers": "",
+              "arrow": {
+                "route": "auto",
+                "startEdge": "auto",
+                "endEdge": "auto",
+                "offset": 0,
+                "bend": 0
+              }
             },
             {
               "id": "dh-vengeance-anticipation",
               "name": "Anticipation",
-              "icon": "assets/wowhead/ability_demonhunter_demonspikes.jpg",
+              "icon": "assets/designer/d1cd26433dc87dda282c2f731127ed25c8ca6cc2652baffec30c275ccbc530e4.png",
               "row": 0,
               "col": 2,
               "maxRanks": 5,
@@ -2344,7 +2421,7 @@
               "name": "Deflection",
               "icon": "assets/shared/e9c6551f334388cd443d1e47e2f04666a6dc4104956cc44dc35bb51471085fd5.png",
               "row": 1,
-              "col": 0,
+              "col": 3,
               "maxRanks": 5,
               "requiredPoints": null,
               "description": "Increases your chance to parry by {value}%.",
@@ -2437,18 +2514,18 @@
             },
             {
               "id": "talent-ef6eb809-bedc-4036-8eb8-f667ab6e5ecb",
-              "name": "Painbringer",
+              "name": "Spell Warding",
               "icon": "assets/wowhead/artifactability_vengeancedemonhunter_painbringer.jpg",
-              "row": 2,
+              "row": 0,
               "col": 0,
               "maxRanks": 3,
               "requiredPoints": null,
-              "description": "After dodging or parrying, reduces the next Physical hit you take by {value}%. Lasts 6 sec and cannot stack.",
+              "description": "After dodging or parrying, reduces the next Non-physical damage you take by {value}%. Lasts 6 sec and cannot stack.",
               "valuePerRank": 5,
               "rankDescriptions": [],
               "prerequisite": "",
               "type": "Passive",
-              "school": "Physical",
+              "school": "Chaos",
               "source": {
                 "spellId": 207387,
                 "url": "https://www.wowhead.com/spell=207387",
@@ -2511,7 +2588,7 @@
               "name": "Improved Immolation Aura",
               "icon": "assets/shared/f3d4043145698f685b7c4692040d5d0cbd85fe4b86f36b174f465804c07e5404.png",
               "row": 2,
-              "col": 3,
+              "col": 0,
               "maxRanks": 3,
               "requiredPoints": null,
               "description": "Increases the damage dealt by Immolation Aura by {value}%.",
@@ -2634,7 +2711,7 @@
               "col": 1,
               "maxRanks": 2,
               "requiredPoints": null,
-              "description": "Chaos Strike and Soul Cleave increase leech by {value}%",
+              "description": "Chaos Strike and Soul Cleave increase leech by {value}% for 3 seconds",
               "valuePerRank": 15,
               "rankDescriptions": [],
               "prerequisite": "",
@@ -2722,7 +2799,7 @@
               "name": "Demonic Will",
               "icon": "assets/shared/fd69bbc6cca835cc5ca9f4754459572677b3ce26afbe67771bc22f48f4bcd125.png",
               "row": 1,
-              "col": 3,
+              "col": 0,
               "maxRanks": 3,
               "requiredPoints": null,
               "description": "Increases your chance to resist Stun and Fear effects by {value}%.",
@@ -2750,41 +2827,12 @@
               "id": "dh-vengeance-demonic-ward",
               "name": "Demonic Ward",
               "icon": "assets/shared/ea03c04a054c416ff41186fb71cfc1826eb32a6653d9f4e421cd325b054faefa.png",
-              "row": 3,
+              "row": 0,
               "col": 3,
               "maxRanks": 3,
               "requiredPoints": null,
               "description": "Increases your total Stamina by {value}%.",
               "valuePerRank": 6,
-              "rankDescriptions": [],
-              "prerequisite": "",
-              "type": "Passive",
-              "school": "Physical",
-              "source": null,
-              "detailStatus": "custom-design",
-              "detailSourceUrl": "",
-              "detailSourceVersion": "Custom Forever-inspired Demon Hunter draft",
-              "spellDetailVersion": 2,
-              "effectDetails": [],
-              "damageModifiers": "",
-              "arrow": {
-                "route": "auto",
-                "startEdge": "auto",
-                "endEdge": "auto",
-                "offset": 0,
-                "bend": 0
-              }
-            },
-            {
-              "id": "dh-vengeance-soul-fortification",
-              "name": "Soul Fortification",
-              "icon": "assets/wowhead/inv_soulbarrier.jpg",
-              "row": 5,
-              "col": 2,
-              "maxRanks": 3,
-              "requiredPoints": null,
-              "description": "Soul Cleave and Chaos Strike increases your Armor by {value}% for 8 sec. Refreshes rather than stacking.",
-              "valuePerRank": 4,
               "rankDescriptions": [],
               "prerequisite": "",
               "type": "Passive",
@@ -2854,6 +2902,57 @@
               "maxRanks": 5,
               "requiredPoints": null,
               "prerequisite": "",
+              "type": "Passive",
+              "school": "Unspecified",
+              "source": null,
+              "damageModifiers": "",
+              "arrow": {
+                "route": "auto",
+                "startEdge": "auto",
+                "endEdge": "auto",
+                "offset": 0,
+                "bend": 0
+              }
+            },
+            {
+              "id": "talent-1d6a74dd-0dc0-47ba-8049-1e6d64cce038",
+              "name": "Demon Spikes",
+              "icon": "assets/wowhead/ability_demonhunter_demonspikes.jpg",
+              "description": "20 Fury · Self · Instant · 12 Second Cooldown\n\nDoubles Parry Chance and Dodge Chance for 1 Seconds",
+              "rankDescriptions": [],
+              "valuePerRank": 2,
+              "row": 2,
+              "col": 3,
+              "maxRanks": 1,
+              "requiredPoints": null,
+              "prerequisite": "dh-vengeance-deflection",
+              "type": "Active",
+              "school": "Unspecified",
+              "source": null,
+              "damageModifiers": "",
+              "arrow": {
+                "route": "auto",
+                "startEdge": "auto",
+                "endEdge": "auto",
+                "offset": 0,
+                "bend": 0
+              }
+            },
+            {
+              "id": "talent-34d7594c-3f6e-4627-a69f-37931c8e522b",
+              "name": "Improved Demon Spikes",
+              "icon": "assets/designer/183ff5985724495ad5721d3583aa2775b488f33e0b76f848f8f7481c02389138.png",
+              "description": "Increases duration of Demon Spikes by {value} seconds",
+              "rankDescriptions": [
+                "Increases duration of Demon Spikes by 1 second.",
+                "Increases duration of Demon Spikes by 2 seconds."
+              ],
+              "valuePerRank": 1,
+              "row": 3,
+              "col": 3,
+              "maxRanks": 2,
+              "requiredPoints": null,
+              "prerequisite": "talent-1d6a74dd-0dc0-47ba-8049-1e6d64cce038",
               "type": "Passive",
               "school": "Unspecified",
               "source": null,
@@ -3189,7 +3288,7 @@
             {
               "id": "dh-devastation-greater-sigils",
               "name": "Greater Sigils",
-              "icon": "assets/wowhead/ability_demonhunter_sigilofinquisition.jpg",
+              "icon": "assets/designer/a40d675c0dafb918ce9d5bd84ba2a1648fd9e989db282538dbc58c46880158d9.png",
               "row": 4,
               "col": 2,
               "maxRanks": 3,
@@ -3314,7 +3413,7 @@
             {
               "id": "dh-devastation-improved-eye-beam",
               "name": "Improved Eye Beam",
-              "icon": "assets/wowhead/ability_demonhunter_eyebeam.jpg",
+              "icon": "assets/designer/256b3797e10bdea81a91234314416861ddc9c91e765e47d6a39add30044da815.png",
               "row": 5,
               "col": 1,
               "maxRanks": 3,
@@ -3343,7 +3442,7 @@
             {
               "id": "dh-devastation-spellbound-glaives",
               "name": "Spellbound Glaives",
-              "icon": "assets/wowhead/ability_demonhunter_chaosstrike.jpg",
+              "icon": "assets/designer/84373d5915364ad7d39f78035dceb9c9d8e7829ef7a9ca9306003d99bf4abd9f.png",
               "row": 4,
               "col": 0,
               "maxRanks": 5,
@@ -3431,7 +3530,7 @@
           "specArtworkVersion": 1
         }
       ],
-      "designVersion": "dh-completed-local-20261013"
+      "designVersion": "c72dec59-df4d-4e6b-bbd7-8703cb3ba074"
     },
     {
       "id": "class-8ec09d30-7fef-4ec0-91ca-fbfea03cb458",
