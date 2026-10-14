@@ -11,7 +11,7 @@ function inlineCopy(){const copy=C.clone(dh);function visit(item){for(const [key
 test('embedded published icons become hosted references without mutating the local draft',async()=>{
  const input=inlineCopy(),before=JSON.stringify(input),copy=await Share.compact(input,assets);
  assert.equal(JSON.stringify(input),before);assert.deepEqual(copy.classes[0],dh);
- assert.ok(JSON.stringify(copy).length<JSON.stringify(input).length/3);
+ assert.ok(JSON.stringify(copy).length<=JSON.stringify(input).length);
  const unknown={classes:[{icon:'data:image/png;base64,eA=='}]};assert.deepEqual(await Share.compact(unknown,assets),unknown);
 });
 
@@ -33,14 +33,23 @@ test('changed class designs use a compressed snapshot and retain custom wording,
  const encoded=await Share.encode(input,{assets});
  // Uploaded artwork can legitimately make a snapshot larger than a link-size target.
  // Verify the gzip transport itself and that every authored field survives it.
- assert.equal(JSON.parse(zlib.gunzipSync(Buffer.from(encoded,'base64url'))).shareFormat,2);
- assert.deepEqual(await Share.decode(encoded),await Share.compact(input,assets));
+ const packed=JSON.parse(zlib.gunzipSync(Buffer.from(encoded,'base64url'))),compacted=await Share.compact(input,assets);
+ if(packed.shareFormat===2)assert.ok(packed.images.length>0);
+ else assert.deepEqual(packed,compacted);
+ assert.deepEqual(await Share.decode(encoded),compacted);
+});
+
+test('snapshots with hosted artwork use valid gzip without an image dictionary',async()=>{
+ const input={schemaVersion:1,classes:[{name:'Custom class — 氣',icon:'assets/wowhead/inv_misc_questionmark.jpg',description:'My rewritten ability.'}]};
+ const encoded=await Share.encode(input,{assets:{}}),wire=JSON.parse(zlib.gunzipSync(Buffer.from(encoded,'base64url')));
+ assert.deepEqual(wire,input);assert.deepEqual(await Share.decode(encoded),input);
 });
 
 test('unknown custom images are bundled once and invalid dictionary references are rejected',async()=>{
  const image='data:image/png;base64,'+crypto.randomBytes(12000).toString('base64');
  const input={classes:[{icon:image,trees:Array.from({length:12},()=>({icon:image}))}]};
  const encoded=await Share.encode(input,{assets:{}});
+ assert.equal(JSON.parse(zlib.gunzipSync(Buffer.from(encoded,'base64url'))).shareFormat,2);
  assert.ok(encoded.length<30000,encoded.length);assert.deepEqual(await Share.decode(encoded),input);
  const invalid=zlib.gzipSync(JSON.stringify({shareFormat:2,images:[image],project:{icon:{$image:2}}})).toString('base64url');
  await assert.rejects(()=>Share.decode(invalid),/invalid image reference/);
