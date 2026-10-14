@@ -20,6 +20,8 @@ Class definitions and images are public once deployed. This static website does 
 
 ## Update class definitions
 
+In **Create class** or **Class settings**, use **Choose from icon database** to search the entire downloaded WoW icon catalog. Picking an icon preserves the rest of the form and takes effect when you create the class or save its settings. Canceling the picker returns to the form without changing the class.
+
 1. Use **Export project** in the local studio or hosted **Design mode**.
 2. Replace this repository's `project.json` with that JSON export.
 3. Copy any newly referenced local image files from the studio's `dist/assets/` into the matching `assets/` path here. Uploaded images embedded in the export need no separate file.

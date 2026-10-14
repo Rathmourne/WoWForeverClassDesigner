@@ -325,10 +325,11 @@ const $ = id => document.getElementById(id);
     $('dialog-content').innerHTML = `<div class="dialog-header"><h2 id="dialog-title">${esc(title)}</h2><button class="quiet" data-action="close-dialog" aria-label="Close dialog">✕</button></div>${body}`;
     if (!$('editor-dialog').open) $('editor-dialog').showModal();
   }
-  function closeDialog() { $('editor-dialog').close(); }
-  function classDialog(create=false) {
-    const c = create ? {name:'New class',description:'',pointBudget:51,pointsPerTier:5,startLevel:10,levelCap:60,color:'#b59b73',icon:'assets/wowhead/class_deathknight.jpg',sourceSlug:''} : current();
-    dialog(create?'Create a class':'Class settings',`<form id="class-edit" class="dialog-form" data-create="${create}">${field('Class name','name',c.name,'text','maxlength="80" required')}<label>Class description<textarea name="description" maxlength="2000">${esc(c.description)}</textarea></label><div class="field-row">${field('Class color','color',c.color,'color')}${selectField('Class icon','icon',c.icon,[['assets/wowhead/class_deathknight.jpg','Death Knight'],['assets/wowhead/class_demonhunter.jpg','Demon Hunter'],['assets/wowhead/class_monk.jpg','Monk'],...(window.WOW_FOREVER_CLASSES||[]).map(k=>[k.icon,k.name]),...(seeds.some(s=>'assets/wowhead/'+s.icon+'.jpg'===c.icon)?[]:[[c.icon,'Current icon']])])}</div><div class="field-row">${field('Talent point budget','pointBudget',c.pointBudget,'number','min="0" max="200" required')}${field('Points per tier','pointsPerTier',c.pointsPerTier,'number','min="0" max="20" required')}</div><div class="field-row">${field('First talent level','startLevel',c.startLevel,'number','min="1" max="90" required')}${field('Level cap','levelCap',c.levelCap,'number','min="1" max="100" required')}</div>${selectField('Reference library','sourceSlug',c.sourceSlug,[['','All classes'],...references.map(r=>[r.slug,r.name])])}<p class="help">Rule changes refund any ranks that become invalid. Undo restores the previous build.</p><div class="dialog-footer">${create?'':'<button class="secondary" type="button" data-action="duplicate-class">Duplicate class</button>'}<button type="button" class="secondary" data-action="close-dialog">Cancel</button><button class="gold" type="submit">${create?'Create class':'Save settings'}</button></div></form>`);
+  function closeDialog() { if(classIconDraft){const draft=classIconDraft;classIconDraft=null;classDialog(draft.create,draft.values);return;} $('editor-dialog').close(); }
+  let classIconDraft=null;
+  function classDialog(create=false, draft=null) {
+    const c = draft || (create ? {name:'New class',description:'',pointBudget:51,pointsPerTier:5,startLevel:10,levelCap:60,color:'#b59b73',icon:'assets/wowhead/class_deathknight.jpg',sourceSlug:''} : current());
+    dialog(create?'Create a class':'Class settings',`<form id="class-edit" class="dialog-form" data-create="${create}">${field('Class name','name',c.name,'text','maxlength="80" required')}<label>Class description<textarea name="description" maxlength="2000">${esc(c.description)}</textarea></label><div class="field-row">${field('Class color','color',c.color,'color')}<div>${selectField('Class icon','icon',c.icon,[['assets/wowhead/class_deathknight.jpg','Death Knight'],['assets/wowhead/class_demonhunter.jpg','Demon Hunter'],['assets/wowhead/class_monk.jpg','Monk'],...(window.WOW_FOREVER_CLASSES||[]).map(k=>[k.icon,k.name]),...(seeds.some(s=>'assets/wowhead/'+s.icon+'.jpg'===c.icon)?[]:[[c.icon,'Current icon']])])}<div class="icon-field"><img id="class-dialog-icon" src="${esc(c.icon)}" alt="Selected class icon" width="48" height="48"><button type="button" class="secondary" data-action="pick-class-icon">Choose from icon database</button></div></div></div><div class="field-row">${field('Talent point budget','pointBudget',c.pointBudget,'number','min="0" max="200" required')}${field('Points per tier','pointsPerTier',c.pointsPerTier,'number','min="0" max="20" required')}</div><div class="field-row">${field('First talent level','startLevel',c.startLevel,'number','min="1" max="90" required')}${field('Level cap','levelCap',c.levelCap,'number','min="1" max="100" required')}</div>${selectField('Reference library','sourceSlug',c.sourceSlug,[['','All classes'],...references.map(r=>[r.slug,r.name])])}<p class="help">Rule changes refund any ranks that become invalid. Undo restores the previous build.</p><div class="dialog-footer">${create?'':'<button class="secondary" type="button" data-action="duplicate-class">Duplicate class</button>'}<button type="button" class="secondary" data-action="close-dialog">Cancel</button><button class="gold" type="submit">${create?'Create class':'Save settings'}</button></div></form>`);
   }
   function treeDialog(id) {
     const tree=current().trees.find(t=>t.id===id); if(!tree)return;
@@ -390,6 +391,7 @@ const $ = id => document.getElementById(id);
     $('icon-pagination').innerHTML=`<button data-action="icon-prev" aria-label="Previous icon page" ${iconPage===0?'disabled':''}>←</button><span>Page ${iconPage+1} of ${pages}</span><button data-action="icon-next" aria-label="Next icon page" ${iconPage+1===pages?'disabled':''}>→</button>`;
   }
   function stageIcon(image){
+    if(classIconDraft){const draft=classIconDraft;classIconDraft=null;draft.values.icon=image;classDialog(draft.create,draft.values);toast('Class icon selected. Save the class to apply it.');return;}
     const form=$('item-edit'),found=selected();if(!found)return;
     if(form){form.elements.icon.value=image;form.querySelector('.icon-field img').src=image;$('live-preview').innerHTML=preview(readItemForm(form,found.item,found.tree),!!found.tree,found.tree);toast('Icon selected. Apply changes to save it.');}
     else mutate(()=>{found.item.icon=image;});
@@ -525,6 +527,7 @@ const $ = id => document.getElementById(id);
       case 'use-ability-template':useAbilityTemplate();break;
       case 'template-prev':templatePage=Math.max(0,templatePage-1);renderTemplateResults();break;
       case 'template-next':templatePage++;renderTemplateResults();break;
+      case 'pick-class-icon':{const form=$('class-edit');if(form){classIconDraft={create:form.dataset.create==='true',values:Object.fromEntries(new FormData(form))};iconsDialog();}break;}
       case 'pick-icon':iconsDialog();break;
       case 'set-icon':stageIcon(button.dataset.icon);break;
       case 'set-catalog-icon':selectCatalogIcon(button);break;
@@ -595,6 +598,7 @@ const $ = id => document.getElementById(id);
     }
   });
   document.addEventListener('change',event=>{
+    if(event.target.closest('#class-edit')&&event.target.name==='icon')$('class-dialog-icon').src=event.target.value;
     if(event.target.id==='library-kind'){libraryKind=event.target.value;libraryPage=0;renderLibrary();}
     if(event.target.id==='icon-category'){iconCategory=event.target.value;iconPage=0;renderIconResults();}
     if(event.target.id==='template-class'){templateClass=event.target.value;templatePage=0;templateSelected=null;renderTemplateResults();}
@@ -658,6 +662,7 @@ const $ = id => document.getElementById(id);
     if(event.key==='Escape')$('tooltip').hidden=true;
   });
   document.addEventListener('error',event=>{if(event.target.tagName==='IMG'&&!event.target.src.endsWith('inv_misc_questionmark.jpg'))event.target.src=fallback;},true);
+  $('editor-dialog').addEventListener('cancel',event=>{if(classIconDraft){event.preventDefault();closeDialog();}});
   $('editor-dialog').addEventListener('click',event=>{if(event.target===$('editor-dialog')){const r=$('editor-dialog').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog();}});
   new ResizeObserver(()=>drawDependencyArrows()).observe($('canvas'));
   if(playMode){
