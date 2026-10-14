@@ -1926,9 +1926,9 @@
               "id": "dh-havoc-aggression",
               "name": "Aggression",
               "icon": "assets/shared/8ca17e4c58ad32a6a366d50498a863a84f87e3fbd553c997b805d8023268c24f.png",
-              "row": 5,
+              "row": 4,
               "col": 3,
-              "maxRanks": 3,
+              "maxRanks": 5,
               "requiredPoints": null,
               "description": "Increases the damage of Chaos Strike and Annihilation by {value}%.",
               "valuePerRank": 2,
@@ -1987,7 +1987,7 @@
               "id": "talent-3ef1c415-47a8-4665-bfe5-0e5a3e6dc2b3",
               "name": "Improved Chaos Strike",
               "icon": "assets/shared/d096052800dcaf0686eb56a4de10d2ff2239edf94dee4f0ee6a53fb3974bf3fa.png",
-              "row": 5,
+              "row": 4,
               "col": 2,
               "maxRanks": 5,
               "requiredPoints": null,
@@ -2682,7 +2682,7 @@
               "col": 2,
               "maxRanks": 1,
               "requiredPoints": null,
-              "description": "Each Immolation Aura pulse generates {value} Fury once, regardless of how many enemies it hits. The aura's shared 3 sec internal cooldown still applies.",
+              "description": "Each Immolation Aura pulse generates {value} Fury. Cannot occur more than once per 3 Seconds.",
               "valuePerRank": 10,
               "rankDescriptions": [],
               "prerequisite": "talent-cc8d8a26-8574-443a-ad8f-951f91e20c55",
@@ -3530,7 +3530,7 @@
           "specArtworkVersion": 1
         }
       ],
-      "designVersion": "c72dec59-df4d-4e6b-bbd7-8703cb3ba074"
+      "designVersion": "58be630d-e198-4e9d-bff6-562a908d2cd0"
     },
     {
       "id": "class-8ec09d30-7fef-4ec0-91ca-fbfea03cb458",
