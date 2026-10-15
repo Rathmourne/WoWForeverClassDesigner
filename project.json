@@ -511,6 +511,22 @@
           "effectDetails": [],
           "requiresTalentId": "dk-unholy-outbreak",
           "requiresTalentTreeId": "tree-fceafb02-fe08-4b67-ac7f-5b6a4479316f"
+        },
+        {
+          "id": "ability-5f78b780-9b93-4b55-9dcf-39aa0bf03dbd",
+          "name": "Death Rune",
+          "icon": "assets/designer/5be51774c908105f0188e79144454db3122704044fd7f7f553f498ac0d132114.png",
+          "description": "20% chance on generating a rune for the rune to become a Death Rune",
+          "type": "Passive",
+          "level": 1,
+          "cost": "None",
+          "castTime": "Instant",
+          "cooldown": "None",
+          "range": "Self",
+          "school": "Unspecified",
+          "effects": "",
+          "source": null,
+          "damageModifiers": ""
         }
       ],
       "trees": [
@@ -1955,13 +1971,13 @@
             },
             {
               "id": "dk-unholy-wandering-plague",
-              "name": "Wandering Plague",
+              "name": "Improved Death Coil",
               "row": 4,
               "col": 0,
               "maxRanks": 3,
-              "description": "Your disease ticks deal {value}% of their damage to other enemies within 8 yards.",
+              "description": "Death Coil has {value}% chance to refund your Rune with a Death",
               "icon": "assets/wowhead/spell_deathknight_necroticplague.jpg",
-              "valuePerRank": 10,
+              "valuePerRank": 5,
               "rankDescriptions": [],
               "requiredPoints": null,
               "prerequisite": "",
@@ -1973,7 +1989,14 @@
               "detailSourceVersion": "Custom Classic Death Knight",
               "spellDetailVersion": 2,
               "effectDetails": [],
-              "damageModifiers": ""
+              "damageModifiers": "",
+              "arrow": {
+                "route": "auto",
+                "startEdge": "auto",
+                "endEdge": "auto",
+                "offset": 0,
+                "bend": 0
+              }
             },
             {
               "id": "dk-unholy-unholy-aura",
@@ -2113,7 +2136,7 @@
           "specArtworkVersion": 1
         }
       ],
-      "designVersion": "972ea800-c4a4-4a16-b4f3-a4389d888c74",
+      "designVersion": "7affee75-c88b-406b-8666-6743b0eda180",
       "designRules": {
         "runeCap": 5,
         "resource": "Blood, Frost, Unholy and Death Runes; no Runic Power",
