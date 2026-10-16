@@ -1,0 +1,249 @@
+{
+  "source": "Wowhead Forever talent calculator",
+  "sourceUrl": "https://www.wowhead.com/forever/talent-calc/warrior",
+  "calculatorDataUrl": "https://nether.wowhead.com/forever/data/talents-classic?dv=29&db=1792115368",
+  "snapshot": "2026-10-15",
+  "classes": [
+    {
+      "name": "Warrior",
+      "slug": "warrior",
+      "trees": [
+        {
+          "name": "Arms",
+          "talents": 17
+        },
+        {
+          "name": "Fury",
+          "talents": 17
+        },
+        {
+          "name": "Protection",
+          "talents": 18
+        }
+      ],
+      "talents": 52,
+      "abilities": 111,
+      "changedTalents": 3,
+      "changedAbilities": 75
+    },
+    {
+      "name": "Paladin",
+      "slug": "paladin",
+      "trees": [
+        {
+          "name": "Holy",
+          "talents": 17
+        },
+        {
+          "name": "Protection",
+          "talents": 16
+        },
+        {
+          "name": "Retribution",
+          "talents": 17
+        }
+      ],
+      "talents": 50,
+      "abilities": 173,
+      "changedTalents": 7,
+      "changedAbilities": 130
+    },
+    {
+      "name": "Hunter",
+      "slug": "hunter",
+      "trees": [
+        {
+          "name": "Beast Mastery",
+          "talents": 16
+        },
+        {
+          "name": "Marksmanship",
+          "talents": 16
+        },
+        {
+          "name": "Survival",
+          "talents": 18
+        }
+      ],
+      "talents": 50,
+      "abilities": 181,
+      "changedTalents": 6,
+      "changedAbilities": 107
+    },
+    {
+      "name": "Rogue",
+      "slug": "rogue",
+      "trees": [
+        {
+          "name": "Assassination",
+          "talents": 17
+        },
+        {
+          "name": "Combat",
+          "talents": 17
+        },
+        {
+          "name": "Subtlety",
+          "talents": 19
+        }
+      ],
+      "talents": 53,
+      "abilities": 97,
+      "changedTalents": 6,
+      "changedAbilities": 80
+    },
+    {
+      "name": "Priest",
+      "slug": "priest",
+      "trees": [
+        {
+          "name": "Discipline",
+          "talents": 18
+        },
+        {
+          "name": "Holy",
+          "talents": 17
+        },
+        {
+          "name": "Shadow",
+          "talents": 17
+        }
+      ],
+      "talents": 52,
+      "abilities": 237,
+      "changedTalents": 15,
+      "changedAbilities": 174
+    },
+    {
+      "name": "Shaman",
+      "slug": "shaman",
+      "trees": [
+        {
+          "name": "Elemental",
+          "talents": 16
+        },
+        {
+          "name": "Enhancement",
+          "talents": 18
+        },
+        {
+          "name": "Restoration",
+          "talents": 16
+        }
+      ],
+      "talents": 50,
+      "abilities": 176,
+      "changedTalents": 16,
+      "changedAbilities": 136
+    },
+    {
+      "name": "Mage",
+      "slug": "mage",
+      "trees": [
+        {
+          "name": "Arcane",
+          "talents": 19
+        },
+        {
+          "name": "Fire",
+          "talents": 17
+        },
+        {
+          "name": "Frost",
+          "talents": 19
+        }
+      ],
+      "talents": 55,
+      "abilities": 184,
+      "changedTalents": 15,
+      "changedAbilities": 164
+    },
+    {
+      "name": "Warlock",
+      "slug": "warlock",
+      "trees": [
+        {
+          "name": "Affliction",
+          "talents": 17
+        },
+        {
+          "name": "Demonology",
+          "talents": 19
+        },
+        {
+          "name": "Destruction",
+          "talents": 16
+        }
+      ],
+      "talents": 52,
+      "abilities": 160,
+      "changedTalents": 11,
+      "changedAbilities": 115
+    },
+    {
+      "name": "Druid",
+      "slug": "druid",
+      "trees": [
+        {
+          "name": "Balance",
+          "talents": 16
+        },
+        {
+          "name": "Feral Combat",
+          "talents": 20
+        },
+        {
+          "name": "Restoration",
+          "talents": 16
+        }
+      ],
+      "talents": 52,
+      "abilities": 202,
+      "changedTalents": 8,
+      "changedAbilities": 141
+    }
+  ],
+  "totals": {
+    "classes": 9,
+    "trees": 27,
+    "talents": 466,
+    "abilities": 1521,
+    "tooltips": 1987
+  },
+  "changedTrees": [
+    41,
+    61,
+    81,
+    161,
+    201,
+    203,
+    261,
+    262,
+    281,
+    282,
+    283,
+    301,
+    302,
+    303,
+    362,
+    363,
+    381,
+    383
+  ],
+  "missingWowheadDescriptions": [
+    1241585,
+    1241586,
+    1241588,
+    1241590,
+    1264456,
+    1310705,
+    1310706
+  ],
+  "descriptionsFilledFromClient": [],
+  "coefficientSource": "https://foreverdb.net",
+  "coefficientBuild": "1.60.1.70425",
+  "coefficientRecordsMatched": 1987,
+  "metadataNote": "Calculator names and ranks plus current tooltip text, costs, ranges and cast times were refreshed. Supplementary listing pages returned empty responses; current client school classifications were used.",
+  "newArtworkFiles": 0,
+  "refreshedDetails": 3974
+}

@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const C=require('../src/core.js'),L=require('../src/library-tools.js'),Share=require('../src/share.js');
 test('Forever Lightning Bolt Rank 3 retains the verified damage coefficient',()=>{
   const p=JSON.parse(fs.readFileSync(require('node:path').join(__dirname,'../project.json'),'utf8')),shaman=p.classes.find(c=>c.sourceSlug==='shaman'),bolt=shaman.abilities.find(a=>a.source.spellId===548);
-  assert.equal(bolt.effectDetails[0].spellPower,0.714);assert.match(bolt.damageModifiers,/0\.714 \(71\.4%\)/);assert.match(bolt.effects,/Damage/);assert.equal(bolt.detailSourceUrl,'https://foreverdb.net/spell/548');assert.match(bolt.detailSourceVersion,/1\.60\.1\.70338/);assert.doesNotMatch(bolt.damageModifiers,/0\.554/);
+  assert.equal(bolt.effectDetails[0].spellPower,0.714);assert.match(bolt.damageModifiers,/0\.714 \(71\.4%\)/);assert.match(bolt.effects,/Damage/);assert.equal(bolt.detailSourceUrl,'https://foreverdb.net/spell/548');assert.match(bolt.detailSourceVersion,/1\.60\.1\.70425/);assert.doesNotMatch(bolt.damageModifiers,/0\.554/);
 });
 test('Modifier edits and unknown source values survive project validation and sharing',async()=>{
   const p=JSON.parse(fs.readFileSync(require('node:path').join(__dirname,'../project.json'),'utf8')),c=p.classes[0];

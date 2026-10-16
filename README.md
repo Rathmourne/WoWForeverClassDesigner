@@ -1,6 +1,6 @@
 # WoW Forever Class Designer
 
-A public Classic-style calculator for twelve classes, including custom Death Knight, Demon Hunter and Scarlet-inspired Monk designs. Three trees per class, prerequisite arrows, ranked descriptions, spellbooks, device-local builds and shareable build links. **Design mode** opens a full editor with browser-local drafts, ability templates and the complete icon library. No login required.
+A public Classic-style calculator for thirteen classes, including custom Death Knight, Demon Hunter, Scarlet-inspired Monk and Necromancer designs. Three trees per class, prerequisite arrows, ranked descriptions, spellbooks, device-local builds and shareable build links. **Design mode** opens a full editor with browser-local drafts, ability templates and the complete icon library. No login required.
 
 ## Publish when ready
 
@@ -37,13 +37,19 @@ Click **Share design** in the designer. The link includes a snapshot of the sele
 
 When the selected design matches the published class, sharing uses a compact build link containing only its version, class and point allocations. Unpublished rewrites use a gzip-compressed snapshot. Images already hosted by the site are referenced by path, and repeated custom images are included only once. The full JSON export also reuses hosted images without modifying the saved browser draft. Local studio share links point to the hosted calculator so friends can open them directly. Unknown uploaded images remain embedded; image-heavy custom designs may still require a standalone file.
 
+## Original-class source refresh
+
+The nine original classes use the refreshed Wowhead Forever calculator snapshot (`db=1792115368`): 27 trees, 466 talents and 1,521 ranked ability entries. Names, positions, prerequisites, every talent rank description and current spell tooltips are imported from the Forever environment. Spell coefficients and effect details were refreshed from ForeverDB client build **1.60.1.70425**, matching all 1,987 referenced spells. Custom Death Knight, Demon Hunter, Monk and Necromancer definitions were preserved.
+
+The source payload and refresh report are bundled in `assets/data/`. Seven Wowhead ability tooltips still omit effect descriptions; these remain marked as missing source text. The supplemental spell-list pages returned empty responses, so schools came from the current client dataset. Wowhead labels its calculator data as a testing reference that may change.
+
 ## Spell damage modifiers
 
 The hosted designer compares complete class content, including ability additions, removals, descriptions, costs, cooldowns, effects and coefficients. Newly published content refreshes older saved copies with a recoverable backup, even if the publication's version stamp is unchanged. **Review published changes** compares an existing browser copy with the public class; use **Keep my copy** or **Load published class**. Browser-only edits are retained until a newer publication arrives or you choose to load it.
 
 Every ability and talent has an editable **Spell damage modifiers** field. Ability details display the modifier text and imported effect rows. Database templates copy these values independently so you can rewrite them.
 
-The initial detailed import checked 3,027 spell references: 1,987 Forever and 1,040 Retail references for the three custom classes. The ForeverDB client dataset (build **1.60.1.70338**) contains all 1,987 matching Forever spell records, including per-effect Spell Power and Attack Power coefficients, base values, level growth and tick intervals. The modifier source and build are shown in ability details. Where the client stores no coefficient, that is explicitly stated; a server-controlled effect is not assigned an invented value.
+The reference library includes 1,987 Forever spells and 1,040 Retail references for the three original custom classes. The current ForeverDB client dataset (build **1.60.1.70425**) contains all 1,987 matching Forever spell records, including per-effect Spell Power and Attack Power coefficients, base values, level growth and tick intervals. The modifier source and build are shown in ability details. Where the client stores no coefficient, that is explicitly stated; a server-controlled effect is not assigned an invented value.
 
 Retail references for Death Knight, Demon Hunter and Monk remain separate. Explicit scaling terms in their existing Wowhead tooltips are copied as tooltip terms, with their original reference edition. Missing Retail details remain editable and marked as unavailable rather than being filled with Forever values. For example, Forever Lightning Bolt Rank 3 (spell 548) lists a Spell Power coefficient of 0.714 (71.4%). This is source metadata for design work, not a damage simulator.
 
