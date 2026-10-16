@@ -84467,7 +84467,7 @@
           "castTime": "1.5 sec cast",
           "cooldown": "None",
           "school": "Shadow",
-          "effects": "Maximum 3 Skeletal Warriors, including those raised by Grave Plague. Replaces the oldest at the limit. Attacks the selected enemy automatically, then another nearby enemy already in combat. No pet commands.",
+          "effects": "Maximum 12 Skeletal Warriors, including those raised by Grave Plague. Replaces the oldest at the limit. Attacks the selected enemy automatically, then another nearby enemy already in combat. No pet commands.",
           "damageModifiers": "Warrior attack every 2 sec: 28 + 10% of your Spell Power as Physical damage. Health: 400 + 20% of your maximum health.",
           "source": null,
           "detailStatus": "custom-design",
@@ -84488,7 +84488,7 @@
           "castTime": "1.5 sec cast",
           "cooldown": "None",
           "school": "Shadow",
-          "effects": "Maximum 2 Skeletal Archers. Replaces the oldest at the limit. Automatically fires at the selected enemy from up to 30 yd away.",
+          "effects": "Maximum 8 Skeletal Archers. Replaces the oldest at the limit. Automatically fires at the selected enemy from up to 30 yd away.",
           "damageModifiers": "Arrow every 2.5 sec: 34 + 12% of your Spell Power as Physical damage. Health: 300 + 15% of your maximum health.",
           "source": null,
           "detailStatus": "custom-design",
@@ -86402,7 +86402,7 @@
           "necroArtworkVersion": 2
         }
       ],
-      "designVersion": "c6323cee-6c8e-4dfc-9e6c-42cd0e8d7bb5",
+      "designVersion": "00e47206-4640-4223-87f6-cdb4b5fd212c",
       "designRules": {
         "primaryResource": "Mana",
         "corpseCap": 5,
