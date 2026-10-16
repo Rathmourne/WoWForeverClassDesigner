@@ -58,3 +58,24 @@ test('published refresh backs up old versions and preserves a class currently ca
  const updated=W.refreshPublished(s,saved,published);
  assert.ok(updated.updated.includes('Demon Hunter'));assert.equal(W.previous(s,dh.id).classes[0].abilities[0].description,'Old edited version');
 });
+test('ability-only published changes refresh the whole spellbook even when its version stamp is unchanged',()=>{
+ const s=new Storage(),published=project(),saved=C.clone(published),dh=published.classes.find(c=>c.sourceSlug==='demon-hunter');
+ W.refreshPublished(s,saved,published);
+ const old=C.clone(saved.classes.find(c=>c.id===dh.id));
+ for(const key of ['description','cost','cooldown','effects','damageModifiers'])dh.abilities[0][key]='Published '+key;
+ const added={...C.clone(dh.abilities[0]),id:'new-published-ability',name:'Published new ability'};dh.abilities.push(added);
+ const removed=dh.abilities.splice(1,1)[0],diff=W.differences(old,dh);
+ assert.deepEqual(diff.abilities.edited,[dh.abilities[0].name]);assert.deepEqual(diff.abilities.added,[added.name]);assert.deepEqual(diff.abilities.removed,[removed.name]);
+ const result=W.refreshPublished(s,saved,published),updated=result.project.classes.find(c=>c.id===dh.id);
+ assert.deepEqual(result.updated,['Demon Hunter']);assert.deepEqual(updated.abilities,dh.abilities);
+ assert.deepEqual(W.previous(s,dh.id).classes[0].abilities,old.abilities);
+ assert.deepEqual(W.refreshPublished(s,result.project,published).updated,[]);
+});
+test('same-version browser ability edits remain reviewable without being silently overwritten',()=>{
+ const s=new Storage(),published=project(),saved=C.clone(published),dh=saved.classes.find(c=>c.sourceSlug==='demon-hunter');
+ dh.abilities[0].damageModifiers='My local coefficient';const before=C.clone(saved);
+ assert.deepEqual(W.refreshPublished(s,saved,published).updated,[]);assert.deepEqual(saved,before);
+ const diff=W.differences(dh,published.classes.find(c=>c.id===dh.id));assert.equal(diff.changed,true);assert.deepEqual(diff.abilities.edited,[dh.abilities[0].name]);
+ const rankOnly=C.clone(published.classes[0]);rankOnly.ranks[rankOnly.trees[0].talents[0].id]=1;rankOnly.designVersion='different-stamp';
+ assert.equal(W.differences(rankOnly,published.classes[0]).changed,false);
+});

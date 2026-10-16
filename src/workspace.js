@@ -44,16 +44,30 @@
     return copy;
   }
   function refreshPublished(storage,project,published,options={}){
-    let result=project;const updated=[];
+    const baselineKey='talent-forge-published-content-v1';let previous={};
+    try{const saved=JSON.parse(storage.getItem(baselineKey)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))previous=saved;}catch{}
+    let result=project;const updated=[],next={};
     for(const incoming of published.classes){
       const saved=result.classes.find(c=>c.id===incoming.id);
+      next[incoming.id]=contentSignature(incoming);
+      const publishedContentChanged=previous[incoming.id]&&previous[incoming.id]!==next[incoming.id];
       const usePublished=!saved||incoming.id!==options.workingClassId&&(
         options.preferPublished&&incoming.id===options.requestedId||
-        incoming.designVersion&&saved.designVersion!==incoming.designVersion);
+        incoming.designVersion&&saved.designVersion!==incoming.designVersion||publishedContentChanged);
       if(usePublished){result=sync(storage,result,incoming);updated.push(incoming.name);}
     }
+    storage.setItem(baselineKey,JSON.stringify(next));
     return {project:result,updated};
   }
-  const api={signature,stage,receive,sync,previous,refreshPublished};global.TalentForgeWorkspace=api;
+  function contentSignature(c){const copy=C.clone(c);delete copy.designVersion;return signature(copy);}
+  function differences(saved,published){
+    function changes(oldItems,newItems){
+      const oldMap=new Map(oldItems.map(i=>[i.id,i])),newMap=new Map(newItems.map(i=>[i.id,i]));
+      return {added:newItems.filter(i=>!oldMap.has(i.id)).map(i=>i.name),removed:oldItems.filter(i=>!newMap.has(i.id)).map(i=>i.name),edited:newItems.filter(i=>oldMap.has(i.id)&&signature(i)!==signature(oldMap.get(i.id))).map(i=>i.name)};
+    }
+    return {changed:contentSignature(saved)!==contentSignature(published),
+      abilities:changes(saved.abilities,published.abilities),talents:changes(saved.trees.flatMap(t=>t.talents),published.trees.flatMap(t=>t.talents))};
+  }
+  const api={signature,contentSignature,differences,stage,receive,sync,previous,refreshPublished};global.TalentForgeWorkspace=api;
   if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);

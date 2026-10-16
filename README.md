@@ -39,6 +39,8 @@ When the selected design matches the published class, sharing uses a compact bui
 
 ## Spell damage modifiers
 
+The hosted designer compares complete class content, including ability additions, removals, descriptions, costs, cooldowns, effects and coefficients. Newly published content refreshes older saved copies with a recoverable backup, even if the publication's version stamp is unchanged. **Review published changes** compares an existing browser copy with the public class; use **Keep my copy** or **Load published class**. Browser-only edits are retained until a newer publication arrives or you choose to load it.
+
 Every ability and talent has an editable **Spell damage modifiers** field. Ability details display the modifier text and imported effect rows. Database templates copy these values independently so you can rewrite them.
 
 The initial detailed import checked 3,027 spell references: 1,987 Forever and 1,040 Retail references for the three custom classes. The ForeverDB client dataset (build **1.60.1.70338**) contains all 1,987 matching Forever spell records, including per-effect Spell Power and Attack Power coefficients, base values, level growth and tick intervals. The modifier source and build are shown in ability details. Where the client stores no coefficient, that is explicitly stated; a server-controlled effect is not assigned an invented value.

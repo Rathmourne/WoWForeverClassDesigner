@@ -142,6 +142,21 @@ const $ = id => document.getElementById(id);
   const priorClassButton=document.createElement('button');priorClassButton.className='quiet';priorClassButton.textContent='Export previous class';priorClassButton.hidden=true;
   $('export-project').before(priorClassButton);
   priorClassButton.addEventListener('click',()=>{const backup=Workspace.previous(localStorage,current().id);if(backup)exportDownload(backup,'previous-'+slug(current().name)+'-class.json');});
+  const publishedChangesButton=document.createElement('button');publishedChangesButton.className='secondary';publishedChangesButton.textContent='Review published changes';publishedChangesButton.hidden=true;
+  $('class-settings').before(publishedChangesButton);
+  publishedChangesButton.addEventListener('click',()=>{
+    const incoming=publishedProject.classes.find(c=>c.id===current().id);if(!incoming)return;
+    const diff=Workspace.differences(current(),incoming);
+    const details=[['Abilities',diff.abilities],['Talents',diff.talents]].flatMap(([label,group])=>['added','edited','removed'].filter(k=>group[k].length).map(k=>'<p><strong>'+label+' '+k+':</strong> '+esc(group[k].join(', '))+'</p>')).join('');
+    dialog('Compare with published '+incoming.name,'<div class="dialog-form"><p>Your browser copy differs from the published class. Ability descriptions, costs, cooldowns, effects and spell damage modifiers are included in this comparison.</p>'+details+'<p>Keeping your copy makes no changes. Loading the published class saves a backup of your current copy.</p><div class="dialog-footer"><button class="secondary" data-action="close-dialog">Keep my copy</button><button class="gold" id="load-published-class">Load published class</button></div></div>');
+    $('load-published-class').onclick=()=>{
+      try{
+        const incomingCopy=C.clone(incoming);incomingCopy.ranks=C.clone(current().ranks);C.normalizeRanks(incomingCopy);
+        const updated=Workspace.sync(localStorage,project,incomingCopy);
+        mutate(()=>{project=updated;selectDefault();});closeDialog();render();toast(incoming.name+' loaded with its complete spellbook. Your previous copy is backed up.');
+      }catch(error){toast(error.message);}
+    };
+  });
   function selected() {
     const c = current();
     if (selection?.kind === 'talent') {
@@ -190,6 +205,8 @@ const $ = id => document.getElementById(id);
   }
   function render() {
     priorClassButton.hidden=playMode||!Workspace.previous(localStorage,current().id);
+    const published=current()&&publishedProject.classes.find(c=>c.id===current().id);
+    publishedChangesButton.hidden=playMode||!published||!Workspace.differences(current(),published).changed;
     document.querySelector('.calculator-home').href='./?'+new URLSearchParams({class:current().id,view:view==='abilities'?'abilities':'talents'});
     const c = current(); document.documentElement.style.setProperty('--class', c.color);
     $('class-list').innerHTML=classNavigation(project.classes).map(k => `<button class="class-nav ${k.id === c.id ? 'active' : ''}" style="--nav-color:${esc(k.color)}" data-class-id="${esc(k.id)}" aria-pressed="${k.id === c.id}"><img src="${esc(k.icon)}" alt=""><div><span>${esc(k.name)}</span><small>${k.trees.map(t => esc(t.name)).join(' · ')}</small></div></button>`).join('');
