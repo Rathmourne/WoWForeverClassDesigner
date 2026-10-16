@@ -43,6 +43,17 @@
     }
     return copy;
   }
-  const api={signature,stage,receive,sync,previous};global.TalentForgeWorkspace=api;
+  function refreshPublished(storage,project,published,options={}){
+    let result=project;const updated=[];
+    for(const incoming of published.classes){
+      const saved=result.classes.find(c=>c.id===incoming.id);
+      const usePublished=!saved||incoming.id!==options.workingClassId&&(
+        options.preferPublished&&incoming.id===options.requestedId||
+        incoming.designVersion&&saved.designVersion!==incoming.designVersion);
+      if(usePublished){result=sync(storage,result,incoming);updated.push(incoming.name);}
+    }
+    return {project:result,updated};
+  }
+  const api={signature,stage,receive,sync,previous,refreshPublished};global.TalentForgeWorkspace=api;
   if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);

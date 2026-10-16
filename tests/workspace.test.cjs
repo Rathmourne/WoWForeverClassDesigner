@@ -39,3 +39,22 @@ test('repeated mode switches reuse the same class snapshot rather than filling b
  for(let i=0;i<20;i++)assert.equal(W.stage(s,c),first);
  assert.equal(s.length,1);
 });
+test('older saved workshops receive newly published classes while retaining private classes and current edits',()=>{
+ const s=new Storage(),published=project(),necro=published.classes.find(c=>c.name==='Necromancer');assert.ok(necro);
+ const saved=C.clone(published);saved.classes=saved.classes.filter(c=>c.id!==necro.id);
+ const bard=C.clone(saved.classes[0]);bard.id='browser-only-bard';bard.name='Bard';bard.sourceSlug='';
+ saved.classes.push(bard);saved.classes.find(c=>c.sourceSlug==='demon-hunter').abilities[0].description='My unpublished ability edit';
+ const before=C.clone(saved),result=W.refreshPublished(s,saved,published);
+ assert.deepEqual(saved,before);assert.deepEqual(result.updated,['Necromancer']);
+ assert.deepEqual(result.project.classes.find(c=>c.id===necro.id),C.validateProject({schemaVersion:1,classes:[C.clone(necro)]}).classes[0]);
+ assert.deepEqual(result.project.classes.filter(c=>c.id!==necro.id),before.classes);
+ assert.deepEqual(W.refreshPublished(s,result.project,published).updated,[]);
+});
+test('published refresh backs up old versions and preserves a class currently carried between views',()=>{
+ const s=new Storage(),published=project(),saved=C.clone(published),dh=saved.classes.find(c=>c.sourceSlug==='demon-hunter');
+ dh.designVersion='older-version';dh.abilities[0].description='Old edited version';
+ const protectedResult=W.refreshPublished(s,saved,published,{workingClassId:dh.id});
+ assert.deepEqual(protectedResult.updated,[]);assert.equal(protectedResult.project.classes.find(c=>c.id===dh.id).abilities[0].description,'Old edited version');
+ const updated=W.refreshPublished(s,saved,published);
+ assert.ok(updated.updated.includes('Demon Hunter'));assert.equal(W.previous(s,dh.id).classes[0].abilities[0].description,'Old edited version');
+});

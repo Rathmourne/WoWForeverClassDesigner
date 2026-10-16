@@ -121,13 +121,10 @@ const $ = id => document.getElementById(id);
     try{
       const carried=Workspace.receive(localStorage,entry.get('handoff'));
       const requested=publishedProject.classes.find(c=>c.id===entry.get('class')||c.sourceSlug===entry.get('class'));
+      const refreshed=Workspace.refreshPublished(localStorage,project,publishedProject,{requestedId:requested?.id,preferPublished:entry.get('source')==='published',workingClassId:carried?.id});
+      project=refreshed.project;
+      if(refreshed.updated.length)restoreMessage=refreshed.updated.join(', ')+' loaded from the published classes. Previous edited copies are backed up.';
       if(carried){project=Workspace.sync(localStorage,project,carried);restoreMessage=carried.name+' opened from the calculator.';}
-      else for(const published of publishedProject.classes){
-        const saved=project.classes.find(c=>c.id===published.id);
-        if((published.id===requested?.id&&entry.get('source')==='published')||(published.designVersion&&saved&&saved.designVersion!==published.designVersion)){
-          project=Workspace.sync(localStorage,project,published);restoreMessage=published.name+' updated to the published class. Its previous copy is backed up.';
-        }
-      }
     }catch(error){restoreMessage='Could not switch class versions: '+error.message;}
   }
   const newArtwork=Library.migrateStarterArtwork(project);
